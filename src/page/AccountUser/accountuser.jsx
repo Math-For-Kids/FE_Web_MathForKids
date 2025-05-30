@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Imgs } from "../../assets/theme/images";
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { FaMars, FaVenus, FaCrown, FaGraduationCap,FaUsers } from 'react-icons/fa';
 import api from '../../assets/api/Api';
 
 const AccountUser = () => {
@@ -196,11 +197,37 @@ const AccountUser = () => {
     const totalPage = Math.ceil(filteredUsers.length / userPerPage);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+
+    const renderGenderIcon = (gender) => {
+        if (gender.toLowerCase() === 'male') {
+            return <FaMars className="gender-icon" style={{ color: '35A6FF' }} />;
+        } else if (gender.toLowerCase() === 'female') {
+            return <FaVenus className="gender-icon" style={{ color: 'FF3DEDF' }} />;
+        }
+        return null;
+    };
+
+
+
+    const renderRoleIcon = (role) => {
+        switch (role.toLowerCase()) {
+            case 'admin':
+                return <FaCrown className="role-icon" style={{ color: 'FFF82A'}} />;
+            case 'pupil':
+                return <FaGraduationCap className="role-icon" style={{ color: '1EFF37'}} />;
+            case 'user':
+                return <FaUsers className="role-icon" style={{ color: '9b59b6' }} />;
+            default:
+                return null;
+        }
+    };
+
+
     return (
         <div className="container">
             <Navbar />
+            <h1 className="container-title">{t('managementAccountUser')}</h1>
             <div className="container-content">
-                <h1 className="container-title">{t('managementAccountUser')}</h1>
                 <div className="flex justify-between items-center mb-4">
                     <div className="filter-bar">
                         <div className="filter-container">
@@ -218,10 +245,11 @@ const AccountUser = () => {
                                         strokeLinejoin="round">
                                         <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
                                     </svg>
+                                    <button className="filter-text">
+                                        {t('filterBy', { ns: 'common' })}
+                                    </button>
                                 </span>
-                                <button className="filter-text">
-                                    {t('filterBy', { ns: 'common' })}
-                                </button>
+
                                 <select
                                     className="filter-dropdown"
                                     value={selectedRole}
@@ -279,8 +307,8 @@ const AccountUser = () => {
                                 <td className="p-3">{user.address}</td>
                                 <td className="p-3">{user.phoneNumber}</td>
                                 <td className="p-3">{formatFirebaseTimestamp(user.dateOfBirth)}</td>
-                                <td className="p-3">{user.gender}</td>
-                                <td className="p-3">{user.role}</td>
+                                <td className="p-3">{renderGenderIcon(user.gender)}</td>
+                                <td className="p-3">{renderRoleIcon(user.role)}</td>
                                 <td className="p-3 ">
                                     <div className='buttonaction'>
                                         <button
@@ -290,7 +318,7 @@ const AccountUser = () => {
                                             {t('update', { ns: 'common' })}
                                         </button>
                                         <button
-                                            className="text-white px-3 py-1 buttonupdate"
+                                            className="text-white px-3 py-1 buttondetail"
                                             onClick={() => openDetailModal(user)}>
                                             <img className='iconupdate' src={Imgs.pupilwhite} />
                                             {t('pupil')}
@@ -374,7 +402,7 @@ const AccountUser = () => {
                             </tbody>
                         </table>
                     ) : (
-                        <p>Parents have not created a profile for the pupil</p> 
+                        <p>Parents have not created a profile for the pupil</p>
                     )}
                 </Modal>
 

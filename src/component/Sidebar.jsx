@@ -19,6 +19,8 @@ const Dashboard = () => {
         <div className="app-container">
             <div className="sidebar">
                 <div className="sidebar-header">DashStack</div>
+                <div className="sidebar-divider"></div>
+                <a className="sidebar-a">Admin Pages</a>
                 <nav className="sidebar-nav">
                     <Link to="/dashboard" className={`sidebar-item ${activeItem === '/dashboard' ? 'active' : ''}`}>
                         <img
@@ -55,7 +57,7 @@ const Dashboard = () => {
                             className="sidebar-icon"
                         /> {t('completetask')}
                     </Link>
-                     <Link to="/completelesson" className={`sidebar-item ${activeItem === '/completelesson' ? 'active' : ''}`}>
+                    <Link to="/completelesson" className={`sidebar-item ${activeItem === '/completelesson' ? 'active' : ''}`}>
                         <img
                             src={getIcon('/completelesson', Imgs.completetaskwhite, Imgs.completetaskblue)}
                             alt="completelesson"
@@ -71,7 +73,7 @@ const Dashboard = () => {
                     </Link>
 
                     <div className="sidebar-divider"></div>
-                    <a className="sidebar-a">page</a>
+                    <a className="sidebar-a">User Page</a>
 
                     <Link to="/lesson" className={`sidebar-item ${activeItem === '/lesson' ? 'active' : ''}`}>
                         <img
@@ -125,6 +127,7 @@ const Dashboard = () => {
                     </Link>
 
                     <div className="sidebar-divider"></div>
+                    <a className="sidebar-a">Settings & Logout</a>
 
                     <Link to="/setting" className={`sidebar-item ${activeItem === '/setting' ? 'active' : ''}`}>
                         <img
