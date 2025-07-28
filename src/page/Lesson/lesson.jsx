@@ -26,7 +26,7 @@ const Lesson = () => {
     const { t, i18n } = useTranslation(['lesson', 'common']);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
-    const lessonsPerPage = 20;
+    const lessonsPerPage = 100;
 
     const lessonTypes = useMemo(() => [
         { value: 'addition', label: t('addition'), icon: <FaPlus className="icon-type" />, color: '#60D56C' },

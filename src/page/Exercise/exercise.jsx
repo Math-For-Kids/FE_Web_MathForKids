@@ -28,7 +28,7 @@ const Exercise = () => {
     const [visibleExercises, setVisibleExercises] = useState([]);
     const [nextPageToken, setNextPageToken] = useState(null);
     const [countAll, setCountAll] = useState('');
-    const exercisesPerPage = 5;
+    const exercisesPerPage = 100;
     const { Option } = Select;
     const { lessonId } = useParams();
     const navigate = useNavigate();
