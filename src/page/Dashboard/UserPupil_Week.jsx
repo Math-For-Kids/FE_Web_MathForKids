@@ -68,7 +68,10 @@ export default function UserPupil_Week({ range }) {
 
       setData(chartData);
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }

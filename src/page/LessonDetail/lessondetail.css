@@ -26,14 +26,22 @@
 .current-breadcrumb {
     font-weight: bold;
     color: var(--color-breadcrumb);
+    /* padding: 2px 6px; */
 }
 
 .current-breadcrumb-title {
     color: var(--color-breadcrumb);
+    /* padding: 2px 6px; */
 }
 
 .current-breadcrumb-title:hover {
     cursor: pointer;
+    /* color: var(--color-breadcrumb-hover); */
+    background-color: rgba(47, 128, 237, 0.1); /* nền xám nhẹ */
+    /* border-radius: 4px; */
+    /* padding: 2px 6px; */
+    text-decoration: underline;
+    transition: all 0.2s ease;
 }
 
 .ant-breadcrumb {

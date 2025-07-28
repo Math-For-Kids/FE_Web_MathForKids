@@ -1,20 +1,21 @@
 {
     "dashboard": "Dashboard",
-    "accountUser": "Account User",
-    "testSystem": "Test",
+    "accountUser": "User",
+    "testSystem": "Ranking Test",
     "systemTasks": "System Task",
-    "notification": "Notification",
-    "profile": "Profile",
+    "notification": "General Notification",
+    "profile": "Personal Profile",
     "lesson": "Lesson",
     "exercise": "Exercise",
     "assessment": "Assessment",
     "questionTest": "Question Test",
     "reward": "Reward",
     "contact": "Contact",
-    "setting": "Setting",
+    "setting": "Settings",
     "logout": "Logout",
     "pupil": "Pupil",
     "completetask": "Complete task",
-    "level": "Level"
-
+    "level": "Level",
+    "statistic": "Statistics",
+    "management": "Management"
 }

@@ -1,15 +1,30 @@
-import { useEffect, useState } from "react";
+// src/layout/Navbar.jsx
+import { useContext, useState, useEffect } from "react";
 import { Select, Avatar, Space, Flex, Segmented } from "antd";
 import { MoonOutlined, SunOutlined } from "@ant-design/icons";
-import api from "../assets/api/Api";
-import { Imgs } from "../assets/theme/images";
 import { useTranslation } from "react-i18next";
 import logo from "../assets/images/logo.png";
+import { Imgs } from "../assets/theme/images";
+import { UserContext } from "../contexts/UserContext";
+import {
+  injectColorsToRoot,
+  lightColors,
+  darkColors,
+} from "../assets/theme/colors";
+import api from "../assets/api/Api";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const [user, setUser] = useState({ name: "", image: "" });
-  const [userId, setUserID] = useState(null);
+  const { user, reloadUser } = useContext(UserContext);
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode === "true"; // true hoặc false
+  });
+  const userId = localStorage.getItem("userID");
+
+  useEffect(() => {
+    injectColorsToRoot(darkMode ? darkColors : lightColors);
+  }, [darkMode]);
 
   const languageOptions = [
     { value: "English", label: "English", icon: Imgs.English },
@@ -18,38 +33,39 @@ const Navbar = () => {
 
   const selectedLang = i18n.language === "en" ? "English" : "Tiếng Việt";
 
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("userID");
-    setUserID(storedUserId);
-    if (storedUserId) fetchUserData(storedUserId);
-  }, []);
-
-  const fetchUserData = async (id) => {
-    try {
-      const res = await api.get(`/user/${id}`);
-      if (res.data) {
-        setUser({
-          name: res.data.fullName || "Admin",
-          image: res.data.image || "https://i.pravatar.cc/100",
-        });
-        const langCode = res.data.language || "vi";
-        i18n.changeLanguage(langCode);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleLanguageChange = async (value) => {
     const lang = value === "English" ? "en" : "vi";
     i18n.changeLanguage(lang);
     if (userId) {
       try {
         await api.patch(`/user/updateProfile/${userId}`, { language: lang });
-        fetchUserData(userId);
+        reloadUser(); // Cập nhật lại dữ liệu
       } catch (error) {
         console.error(error);
       }
+    }
+  };
+
+  const handleDarkModeToggle = async (value) => {
+    const newMode = value === "dark";
+    setDarkMode(newMode);
+    localStorage.setItem("darkMode", newMode);
+    injectColorsToRoot(newMode ? darkColors : lightColors);
+
+    try {
+      await api.patch(`/user/updateProfile/${userId}`, {
+        mode: newMode ? "dark" : "light",
+      });
+      reloadUser(); // nếu muốn cập nhật context
+      toast.success(t("updateSuccess", { ns: "common" }), {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -57,12 +73,9 @@ const Navbar = () => {
     <Flex
       justify="space-between"
       align="center"
-      style={{
-        padding: "0 16px 0 30px",
-        backgroundColor: "#3366FF",
-      }}
+      style={{ padding: "0 16px 0 30px", backgroundColor: "#3366FF" }}
     >
-      <Space size={0}>        
+      <Space size={0}>
         <h4 style={{ margin: 0, fontWeight: "bold", color: "white" }}>
           Math Kids
         </h4>
@@ -72,6 +85,8 @@ const Navbar = () => {
         <Segmented
           size="middle"
           shape="round"
+          value={darkMode ? "dark" : "light"}
+          onChange={handleDarkModeToggle}
           options={[
             { value: "light", icon: <SunOutlined /> },
             { value: "dark", icon: <MoonOutlined /> },
@@ -97,9 +112,9 @@ const Navbar = () => {
           }))}
         />
         <div>
-          <Avatar src={user.image} />
+          <Avatar src={user?.image || "https://i.pravatar.cc/100"} />
           <span style={{ marginLeft: 10, fontWeight: "bold", color: "white" }}>
-            {user.name}
+            {user?.fullName || "Admin"}
           </span>
         </div>
       </Space>

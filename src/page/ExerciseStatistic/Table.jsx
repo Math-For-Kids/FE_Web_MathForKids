@@ -55,6 +55,7 @@ export default function TableStatistic({
         }
         return index + 1;
       },
+      align: "center",
     },
     {
       title: t("question_level"),
@@ -107,6 +108,20 @@ export default function TableStatistic({
           height: 150,
           width: 400,
           axis: {
+            x: {
+              labelAutoEllipsis: {
+                suffix: "...",
+                minLength: 10,
+                maxLength: 14,
+              },
+              labelAutoWrap: {
+                wordWrapWidth: 80,
+                maxLines: 1,
+                recoverWhenFailed: true,
+              },
+              labelAlign: "horizontal",
+              size: 10,
+            },
             y: false,
           },
           style: {
@@ -188,7 +203,7 @@ export default function TableStatistic({
       title: t("action", { ns: "common" }),
       key: "action",
       align: "center",
-      width: 200,
+      width: 150,
       render: (_, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
         return (
@@ -197,8 +212,10 @@ export default function TableStatistic({
               className="text-white px-3 py-1 buttonupdate"
               // onClick={() => openModal("update", record)}
             >
-              <FaEdit className="iconupdate" />
-              {t("update", { ns: "common" })}
+              <Flex justify="center" align="center">
+                <FaEdit className="iconupdate" />
+                <span>{t("update", { ns: "common" })}</span>
+              </Flex>
             </button>
           </div>
         );

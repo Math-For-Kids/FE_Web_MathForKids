@@ -41,6 +41,6 @@
     "otpSendFailed": "Send OTP fail",
     "emailsDoNotMatch": "Emails do not match!",
     "phoneInvalid":"Invalid Phone number",
-
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "uploadPhoto": "Upload Photo"
 }

@@ -1,5 +1,5 @@
 {
-    "managementExercise": "Management exercise",
+    "managementExercise": "Exercise Management",
     "updateExercise": "Update Exercise",
     "addExercise": "Add Exercise",
     "question": "Question",
@@ -11,7 +11,7 @@
     "selectLesson": "Select lesson",
     "textOption": "Text option",
     "imageOption": "Image option",
-    "option": "Options",
+    "option": "Wrong answers",
     "uploadOption": "Upload option",
     "answer": "Answer",
     "inputAnswer": "Enter answer",
@@ -32,12 +32,13 @@
     "addOption": "Add option",
     "maxThreeOptions": "Maximum selection is 3",
     "atLeastOneOption": "at least one option",
-    "exercise_statistic": "Exercise Statistic",
+    "exercise_statistic": "Exercise Answers Statistic",
     "chart": "Answer statistics",
     "question_level": "Question & Level",
     "ratio": "Ratio",
     "true": "Correct",
     "false": "Wrong",
     "answerViRequired": "Vietnamese answer is required!",
-    "answerEnRequired": "English answer is required!"
+    "answerEnRequired": "English answer is required!",
+    "detail": "Details"
 }

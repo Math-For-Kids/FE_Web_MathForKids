@@ -1,8 +1,8 @@
 {
     "filterBy": "Lọc theo",
-    "addNew": "Thêm mới",
-    "yes": "Đã khóa",
-    "no": "Chưa khóa",
+    "addNew": "Thêm Mới",
+    "yes": "Không vô hiệu hóa",
+    "no": "Vô hiệu hóa",
     "exportFile": "Xuất file",
     "update": "Cập nhật",
     "action": "Hành động",
@@ -19,5 +19,6 @@
     "status": "Tất cả trạng thái",
     ".no": "STT",
     "no_lesson_available": "Không có bài học khả dụng",
-    "exercise_statistic": "Thống kê bài tập"
+    "exercise_statistic": "Đáp Án Bài Tập",
+    "More": "Tải thêm"
 }

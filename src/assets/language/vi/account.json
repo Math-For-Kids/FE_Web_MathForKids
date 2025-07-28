@@ -1,5 +1,5 @@
 {
-    "managementAccountUser": "Quản lý tài khoản người dùng",
+    "managementAccountUser": "Quản lý người dùng",
     "userdetail": "Chi tiết người dùng",
     "fullName": "Họ và tên",
     "email": "Email",
@@ -9,7 +9,7 @@
     "gender": "Giới tính",
     "rolefilter": "Tất cả vai trò",
     "role": "Vai trò",
-    "image": "Ảnh đại diện",
+    "image": "Ảnh hồ sơ",
     "pupil": "Học sinh",
     "nickName": "Biệt danh",
     "grade": "Lớp",
@@ -29,7 +29,7 @@
     "fullNameRequired": "Họ và tên là bắt buộc",
     "genderRequired": "Giới tính là bắt buộc",
     "roleRequired": "Quyền là bắt buộc",
-    "roleUser": "Người dùng",
+    "roleUser": "Phụ huynh",
     "roleAdmin": "Quản trị viên",
     "addAccountUser": "Thêm quản lý",
     "updateAccountUser": "Cập nhật người dùng",
@@ -37,5 +37,6 @@
     "phoneExists": "Số điện thoại này đã được sử dụng.",
     "noPupilProfile": "Không có tài khoản học sinh",
     "male": "Nam",
-    "female": "Nữ"
+    "female": "Nữ",
+    "more_info": "Thông tin khác"
 }

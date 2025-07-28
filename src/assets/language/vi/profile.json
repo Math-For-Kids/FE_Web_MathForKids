@@ -41,5 +41,6 @@
     "otpSendFailed": "Gửi OTP không thành công",
     "emailsDoNotMatch": "Email không khớp!",
     "phoneInvalid": "Số điện thoại không hợp lệ",
-    "loading": "Đang tải..."
+    "loading": "Đang tải...",
+    "uploadPhoto": "Tải Ảnh Lên"
 }

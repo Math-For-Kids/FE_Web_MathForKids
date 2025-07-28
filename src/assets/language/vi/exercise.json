@@ -11,7 +11,7 @@
     "selectLesson": "Chọn bài học",
     "textOption": "Tùy chọn văn bản",
     "imageOption": "Tùy chọn hình ảnh",
-    "option": "Các tùy chọn",
+    "option": "Đáp án sai",
     "uploadOption": "Tải lên tùy chọn",
     "answer": "Đáp án",
     "inputAnswer": "Nhập đáp án",
@@ -32,12 +32,13 @@
     "addOption": "Thêm lựa chọn",
     "maxThreeOptions": "Lựa chọn tối đa là 3",
     "atLeastOneOption": "ít nhất một tùy chọn",
-    "exercise_statistic": "Thống kê bài tập",
+    "exercise_statistic": "Thống kê đáp án bài tập",
     "chart": "Thống kê câu trả lời",
     "question_level": "Câu hỏi & Mức độ",
     "ratio": "Tỉ lệ",
     "true": "Đúng",
     "false": "Sai",
     "answerViRequired": "Đáp án tiếng Việt là bắt buộc!",
-    "answerEnRequired": "Đáp án tiếng Anh là bắt buộc!"
+    "answerEnRequired": "Đáp án tiếng Anh là bắt buộc!",
+    "detail": "Chi tiết"
 }

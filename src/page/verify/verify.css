@@ -11,7 +11,7 @@
 .contentverify {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 5px;
 }
 
 .back-button {

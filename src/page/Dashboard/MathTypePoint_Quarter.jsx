@@ -38,7 +38,10 @@ export default function MathTypePoint_Quarter({ quarterRange, grade }) {
 
       setData(transformed);
     } catch (error) {
-      console.error("Failed to fetch point stats:", error);
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -53,17 +56,66 @@ export default function MathTypePoint_Quarter({ quarterRange, grade }) {
     data,
     xField: "mathType",
     yField: "total",
-    stack: true,
+    group: true,
     colorField: "type",
-    label: {
-      text: ({ total }) => {
-        return total ? total : "";
+    scale: {
+      x: {
+        type: "band",
+        padding: 0.4,
       },
-      position: "inside",
-      style: {
-        fill: "#fff",
-        // fontSize: "12px",
-        fontWeight: "bold",
+    },
+    interaction: {
+      tooltip: {
+        render: (e, { title, items }) => {
+          const total = items.reduce((sum, d) => sum + d.value, 0);
+
+          return (
+            <div key={title}>
+              <div style={{ marginBottom: 6 }}>{title}</div>
+              {items.map((item) => {
+                const { name, value, color } = item;
+                console.log(value, total);
+                const percent =
+                  total > 0
+                    ? parseFloat(((value / total) * 100).toFixed(1))
+                    : 0;
+
+                return (
+                  <div key={name}>
+                    <div
+                      style={{
+                        margin: 0,
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            backgroundColor: color,
+                            marginRight: 6,
+                          }}
+                        ></span>
+                        <span
+                          style={{
+                            marginRight: 30,
+                          }}
+                        >
+                          {name}
+                        </span>
+                      </div>
+                      <strong>{percent}%</strong>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        },
       },
     },
     height: 350,

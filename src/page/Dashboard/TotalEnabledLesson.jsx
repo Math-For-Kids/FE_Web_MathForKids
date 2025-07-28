@@ -15,7 +15,10 @@ export default function TotalEnabledLesson() {
       const response = await countEnabledLesson();
       setData(response.count);
     } catch (error) {
-      console.error("Failed to fetch grade data:", error);
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -26,7 +29,7 @@ export default function TotalEnabledLesson() {
   }, []);
 
   return (
-    <Card style={{}} styles={{ body: { padding: 0 } }}>
+    <Card styles={{ body: { padding: 0 } }}>
       <Flex align="center">
         <span
           style={{

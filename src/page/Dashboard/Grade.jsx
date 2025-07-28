@@ -25,7 +25,10 @@ export default function Grade() {
       }));
       setData(formatted);
     } catch (error) {
-      console.error("Failed to fetch grade data:", error);
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }

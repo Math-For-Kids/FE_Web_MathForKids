@@ -45,7 +45,10 @@ export default function UserPupil_Year({ selectedYearRange }) {
 
       setData(chartData);
     } catch (error) {
-      console.error("Failed to fetch yearly data", error);
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }

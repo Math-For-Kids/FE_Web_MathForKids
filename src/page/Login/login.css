@@ -24,14 +24,14 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
-    height: 250px;
+    height: 270px;
     z-index: 10;
 }
 
 .titlelogin {
     font-size: 30px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 15px;
     color: var(--color-text);
     text-align: center;
 }
@@ -52,7 +52,7 @@
 .labellogin {
     font-size: 16px;
     color: var(--label-login);
-    margin-bottom: 4px;
+    margin-bottom: 10px;
     display: block;
 }
 

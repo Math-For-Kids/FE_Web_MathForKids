@@ -59,7 +59,12 @@ export default function Dashboard() {
           </Col>
         </Row>
         <Card
-          style={{ width: "100%", marginTop: 20, minHeight: "500px" }}
+          style={{
+            width: "100%",
+            marginTop: 20,
+            minHeight: "500px",
+            boxShadow: "5px 5px 10px rgb(218, 218, 244)",
+          }}
           tabList={tabList}
           activeTabKey={activeTab}
           onTabChange={(key) => setActiveTab(key)}

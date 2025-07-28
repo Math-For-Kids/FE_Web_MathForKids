@@ -14,7 +14,7 @@ const Logout = () => {
                     await api.post('/auth/logout');
                     localStorage.removeItem('token');
                     localStorage.removeItem('userID');
-                    toast.success('Đăng xuất thành công!');
+                    toast.success('Logout successfully!');
                     navigate('/login');
                 } catch (error) {
                     toast.error('Đăng xuất thất bại. Vui lòng thử lại.');

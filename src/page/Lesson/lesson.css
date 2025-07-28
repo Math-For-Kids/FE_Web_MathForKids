@@ -21,9 +21,13 @@
 }
 
 .custom-table .ant-table-tbody>tr:hover {
-    cursor: grab;
+    /* cursor: grab; */
     background-color: var(--background-hover);
     color: var(--color-hover);
+}
+
+.custom-table-drag .ant-table-tbody>tr:hover {
+    cursor: grab;
 }
 
 .custom-table .ant-table-tbody>tr.dragging {

@@ -55,7 +55,10 @@ export default function UserPupil_Quarter({ selectedYearRange }) {
 
       setData(chartData);
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message?.[i18n.language], {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -68,6 +71,11 @@ export default function UserPupil_Quarter({ selectedYearRange }) {
 
   const config = {
     data,
+    title: {
+      title:
+        startYear === endYear ? `${startYear}` : `${startYear} - ${endYear}`,
+      align: "center",
+    },
     xField: "quarter",
     yField: "total",
     seriesField: "year",
