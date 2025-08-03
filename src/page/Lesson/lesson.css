@@ -11,17 +11,16 @@
     z-index: 10;
     color: var(--table-color);
     background: var(--background-tabled);
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); */
     margin-top: 0 !important;
 }
 
 /* lesson.css */
-.custom-table .ant-table-tbody>tr {
+/* .custom-table .ant-table-tbody>tr {
     transition: background-color 0.2s, transform 0.2s;
-}
+} */
 
 .custom-table .ant-table-tbody>tr:hover {
-    /* cursor: grab; */
     background-color: var(--background-hover);
     color: var(--color-hover);
 }
@@ -30,11 +29,11 @@
     cursor: grab;
 }
 
-.custom-table .ant-table-tbody>tr.dragging {
+/* .custom-table .ant-table-tbody>tr.dragging {
     background-color: #f0f0f0;
     transition: none;
     z-index: 1000;
-}
+} */
 
 .dragging-over {
     background-color: #e6f7ff;

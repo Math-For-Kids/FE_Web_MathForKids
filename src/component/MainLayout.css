@@ -4,3 +4,16 @@
   height: calc(100vh - 64px); /* Trừ chiều cao Navbar */
   background-color: var(--background-content)
 }
+
+.main-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background-color: var(--scroll); /* Màu tay kéo */
+  border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+}

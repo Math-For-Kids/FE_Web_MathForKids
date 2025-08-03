@@ -4,7 +4,7 @@
 }
 
 /* Form trong Modal */
-.form-content-reward {
+/* .form-content-reward {
     height: 400px;
     overflow-x: auto;
     flex-wrap: wrap;
@@ -14,44 +14,43 @@
     scrollbar-color: #a0a0a0 transparent;
     background-color: var(--background-form);
     /* Màu xanh nhạt đậm hơn cho phần nội dung */
-    padding: 20px;
-    border-radius: 8px;
-}
+    /* padding: 20px;
+    border-radius: 8px; */
+/* }  */
 
-.inputtext input,
+/* .inputtext input,
 .inputtext textarea {
     background-color: var(--background-form);
     color: var(--color-text);
     /* Màu trắng mặc định khi không hover/focus */
-}
+/* }  */
 
 /* Khi hover hoặc focus, đổi chữ thành màu đen */
-.inputtext input:hover,
+/* .inputtext input:hover,
 .inputtext input:focus,
 .inputtext textarea:hover,
 .inputtext textarea:focus {
     color: var(--color-black) !important;
-}
+} */
 
 /* Đảm bảo placeholder giữ màu mặc định */
-.inputtext ::placeholder {
+/* .inputtext ::placeholder {
     color: var(--color-card);
-}
+} */
 
 /* Khi nhập liệu, giữ chữ màu đen */
-.inputtext input:not(:placeholder-shown),
+/* .inputtext input:not(:placeholder-shown),
 .inputtext textarea:not(:placeholder-shown) {
     color: var(--color-black) !important;
-}
+} */
 
 /* Reset màu khi blur (rời focus) */
-.inputtext input:not(:focus):not(:hover),
+/* .inputtext input:not(:focus):not(:hover),
 .inputtext textarea:not(:focus):not(:hover) {
     color:  var(--color-text) !important;
-}
+} */
 
-.ant-select-selector,
-.ant-modal-header {
+/* .ant-select-selector {
     background-color: var(--background-form) !important;
 }
 
@@ -64,13 +63,13 @@
 .ant-select-selection-item,
 .ant-modal-title {
     color: var(--color-text) !important;
-}
+} */
 
 /* Ghi đè style cho viền ngoài của modal từ Ant Design */
-.ant-modal-content {
+/* .ant-modal-content {
     background-color: var(--background-form) !important;
     border-radius: 10px;
-}
+} */
 
 .table-container-reward {
     max-height: calc(100vh - 270px);
@@ -97,16 +96,14 @@
     height: 50px;
     background: #FFA500;
     padding: 10px 16px;
-    display: flex;
-    align-items: center;
     gap: 8px;
     border-radius: 8px;
 }
 
-.custom-upload-button:hover {
+/* .custom-upload-button:hover {
     color: #FFA500 !important;
     background: #FFFFFF !important;
-}
+} */
 
 /* Optional: Specific column widths */
 .table-container-reward th:nth-child(1),

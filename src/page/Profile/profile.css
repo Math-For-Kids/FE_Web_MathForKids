@@ -1,9 +1,9 @@
 .profile-container {
-    background-color: #eeeeee;
+    background-color: var(--profile-bg);
     width: 80%;
-    margin: auto;
+    margin: 60px auto;
     padding: 30px;
-    height: 580px;
+    height: 100%;
     border-radius: 20px;
 }
 
@@ -53,21 +53,21 @@
 .form-group label {
     font-weight: 500;
     margin-bottom: 8px;
-    color: #333;
+    /* color: #333; */
 }
 
 .form-group input,
 .form-group select {
     padding: 12px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 8px;
-    background-color: #fff;
+    /* background-color: #fff; */
     font-size: 15px;
 }
 
-.form-group input:disabled {
+/* .form-group input:disabled {
     color: #464646;
-}
+} */
 
 .btn-wrapper {
     text-align: center;
@@ -76,15 +76,18 @@
 
 .update-btn {
     background-color: #3b82f6;
+    width: 120px;
     height: 40px;
     color: white;
-    padding: 12px 40px;
+    padding: 12px 0;
     border: none;
     border-radius: 8px;
     font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
 }
 
 .update-btn:hover {
-    background-color: #2563eb;
+    background-color: #2563eb !important;
+    color: white !important;
 }

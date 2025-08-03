@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Line } from "@ant-design/plots";
 import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import { UserContext } from "../../contexts/UserContext";
 import { countUsersByYear } from "../../assets/api/User";
 import { countPupilsByYear } from "../../assets/api/Pupil";
 
 export default function UserPupil_Year({ selectedYearRange }) {
+  const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { i18n } = useTranslation();
@@ -65,11 +67,12 @@ export default function UserPupil_Year({ selectedYearRange }) {
     yField: "total",
     colorField: "type",
     shapeField: "smooth",
-    height: 350,
+    theme: user?.mode === "dark" ? "dark" : "light",
+    height: 420,
   };
 
   return loading ? (
-    <Flex justify="center" align="center" style={{ height: "371.5px" }}>
+    <Flex justify="center" align="center" style={{ height: "441.5px" }}>
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     </Flex>
   ) : (

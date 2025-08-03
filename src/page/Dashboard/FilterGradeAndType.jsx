@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Select, Space } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 export default function FilterGrade({ grade, setGrade, type, setType }) {
@@ -8,6 +9,7 @@ export default function FilterGrade({ grade, setGrade, type, setType }) {
   return (
     <Space>
       <Select
+        suffixIcon={<DownOutlined style={{ color: "var(--dropdown-icon)" }} />}
         value={grade}
         onChange={(value) => {
           setGrade(value);
@@ -31,6 +33,7 @@ export default function FilterGrade({ grade, setGrade, type, setType }) {
         </Select.Option>
       </Select>
       <Select
+        suffixIcon={<DownOutlined style={{ color: "var(--dropdown-icon)" }} />}
         value={type}
         onChange={(value) => setType(value)}
         style={{ width: 150 }}

@@ -1,11 +1,12 @@
 // src/layout/Navbar.jsx
 import { useContext, useState, useEffect } from "react";
 import { Select, Avatar, Space, Flex, Segmented } from "antd";
-import { MoonOutlined, SunOutlined } from "@ant-design/icons";
+import { MoonOutlined, SunOutlined, DownOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import logo from "../assets/images/logo.png";
 import { Imgs } from "../assets/theme/images";
 import { UserContext } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 import {
   injectColorsToRoot,
   lightColors,
@@ -16,14 +17,11 @@ import api from "../assets/api/Api";
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { user, reloadUser } = useContext(UserContext);
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    return savedMode === "true"; // true hoặc false
-  });
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"));
   const userId = localStorage.getItem("userID");
 
   useEffect(() => {
-    injectColorsToRoot(darkMode ? darkColors : lightColors);
+    injectColorsToRoot(darkMode === "dark" ? darkColors : lightColors);
   }, [darkMode]);
 
   const languageOptions = [
@@ -48,8 +46,9 @@ const Navbar = () => {
 
   const handleDarkModeToggle = async (value) => {
     const newMode = value === "dark";
-    setDarkMode(newMode);
-    localStorage.setItem("darkMode", newMode);
+    console.log(value);
+    setDarkMode(value);
+    localStorage.setItem("darkMode", value);
     injectColorsToRoot(newMode ? darkColors : lightColors);
 
     try {
@@ -57,10 +56,6 @@ const Navbar = () => {
         mode: newMode ? "dark" : "light",
       });
       reloadUser(); // nếu muốn cập nhật context
-      toast.success(t("updateSuccess", { ns: "common" }), {
-        position: "top-right",
-        autoClose: 2000,
-      });
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
         position: "top-right",
@@ -73,10 +68,19 @@ const Navbar = () => {
     <Flex
       justify="space-between"
       align="center"
-      style={{ padding: "0 16px 0 30px", backgroundColor: "#3366FF" }}
+      style={{
+        padding: "0 16px 0 30px",
+        backgroundColor: "var(--background-navbar)",
+      }}
     >
       <Space size={0}>
-        <h4 style={{ margin: 0, fontWeight: "bold", color: "white" }}>
+        <h4
+          style={{
+            margin: 0,
+            fontWeight: "bold",
+            color: "var(--color-navbar)",
+          }}
+        >
           Math Kids
         </h4>
         <img width={100} src={logo} alt="Logo" />
@@ -85,7 +89,7 @@ const Navbar = () => {
         <Segmented
           size="middle"
           shape="round"
-          value={darkMode ? "dark" : "light"}
+          value={darkMode}
           onChange={handleDarkModeToggle}
           options={[
             { value: "light", icon: <SunOutlined /> },
@@ -93,13 +97,16 @@ const Navbar = () => {
           ]}
         />
         <Select
+          suffixIcon={
+            <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+          }
           value={selectedLang}
           style={{ width: 150 }}
           onChange={handleLanguageChange}
           options={languageOptions.map((opt) => ({
             value: opt.value,
             label: (
-              <span>
+              <span style={{ color: "var(--color-text)" }}>
                 <img
                   src={opt.icon}
                   alt={opt.label}
@@ -113,7 +120,13 @@ const Navbar = () => {
         />
         <div>
           <Avatar src={user?.image || "https://i.pravatar.cc/100"} />
-          <span style={{ marginLeft: 10, fontWeight: "bold", color: "white" }}>
+          <span
+            style={{
+              marginLeft: 10,
+              fontWeight: "bold",
+              color: "var(--color-navbar)",
+            }}
+          >
             {user?.fullName || "Admin"}
           </span>
         </div>

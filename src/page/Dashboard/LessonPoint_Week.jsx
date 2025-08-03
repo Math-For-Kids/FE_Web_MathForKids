@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Column } from "@ant-design/plots";
 import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { UserContext } from "../../contexts/UserContext";
 import { useTranslation } from "react-i18next";
 import { getPointStatsByLessons } from "../../assets/api/Test";
 
 export default function LessonPoint_Week({ weekRange, grade, type }) {
+  const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t, i18n } = useTranslation("lesson");
@@ -88,7 +90,11 @@ export default function LessonPoint_Week({ weekRange, grade, type }) {
 
           return (
             <div key={title}>
-              <div style={{ marginBottom: 6 }}>{title}</div>
+              <div
+                style={{ marginBottom: 6, color: "var(--color-text-chart)" }}
+              >
+                {title}
+              </div>
               {items.map((item) => {
                 const { name, value, color } = item;
                 console.log(value, total);
@@ -120,12 +126,15 @@ export default function LessonPoint_Week({ weekRange, grade, type }) {
                         <span
                           style={{
                             marginRight: 30,
+                            color: "var(--color-text-chart)",
                           }}
                         >
                           {name}
                         </span>
                       </div>
-                      <strong>{percent}%</strong>
+                      <strong style={{ color: "var(--color-text-chart)" }}>
+                        {percent}%
+                      </strong>
                     </div>
                   </div>
                 );
@@ -135,11 +144,12 @@ export default function LessonPoint_Week({ weekRange, grade, type }) {
         },
       },
     },
-    height: 350,
+    theme: user?.mode === "dark" ? "dark" : "light",
+    height: 420,
   };
 
   return loading ? (
-    <Flex justify="center" align="center" style={{ height: "371.5px" }}>
+    <Flex justify="center" align="center" style={{ height: "441.5px" }}>
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     </Flex>
   ) : (

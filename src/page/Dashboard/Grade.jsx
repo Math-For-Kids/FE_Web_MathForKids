@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Pie } from "@ant-design/plots";
+import { UserContext } from "../../contexts/UserContext";
 import { useTranslation } from "react-i18next";
 import { countAll, countPupilsByGrade } from "../../assets/api/Pupil";
 
 export default function Grade() {
+  const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [countPupils, setCountPupils] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -88,12 +90,15 @@ export default function Grade() {
                         <span
                           style={{
                             marginRight: 30,
+                            color: "var(--color-text-chart)",
                           }}
                         >
                           {t("total_pupils")}
                         </span>
                       </div>
-                      <b>{value}</b>
+                      <b style={{ color: "var(--color-text-chart)" }}>
+                        {value}
+                      </b>
                     </div>
                   </div>
                 );
@@ -103,11 +108,12 @@ export default function Grade() {
         },
       },
     },
-    height: 387.5,
+    theme: user?.mode === "dark" ? "dark" : "light",
+    height: 457.5,
     width: 600,
   };
   return loading ? (
-    <Flex justify="center" align="center" style={{ height: "403.5px" }}>
+    <Flex justify="center" align="center" style={{ height: "473.5px" }}>
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     </Flex>
   ) : (

@@ -22,15 +22,7 @@ const Dashboard = () => {
   const { t } = useTranslation(["sidebar", "common"]);
   const darkMode = localStorage.getItem("darkMode") === "true";
 
-  const getIconClass = (path) => {
-    return `sidebar-icon ${
-      activeItem === path
-        ? "text-blue-600"
-        : darkMode
-        ? "text-white"
-        : "text-black"
-    }`;
-  };
+  const getIconClass = () => "sidebar-icon";
 
   return (
     <div className="app-container">
@@ -62,12 +54,12 @@ const Dashboard = () => {
               {t("exercise_statistic")}
             </Link>
             <Link
-              to="/testsystem"
+              to="/rankingtest"
               className={`sidebar-item ${
-                activeItem === "/testsystem" ? "active" : ""
+                activeItem === "/rankingtest" ? "active" : ""
               }`}
             >
-              <FaRankingStar className={getIconClass("/testsystem")} />
+              <FaRankingStar className={getIconClass("/rankingtest")} />
               {t("testSystem")}
             </Link>
             {/* <Link to="/completetask" className={`sidebar-item ${activeItem === '/completetask' ? 'active' : ''}`}>

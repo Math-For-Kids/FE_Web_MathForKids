@@ -20,5 +20,7 @@
     ".no": "No.",
     "no_lesson_available": "No lesson Available",
     "exercise_statistic": "Exercise Answers",
-    "More": "More"
+    "More": "More",
+    "nodata": "No data",
+    "none": "None"
 }

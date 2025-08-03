@@ -1,5 +1,5 @@
 {
-    "managementLessonDetail": "Quản lý Chi tiết Bài học",
+    "managementLessonDetail": "Quản lý chi tiết bài học",
     "addLessonDetail": "Thêm Bài học",
     "addFullLesson": "Thêm Nội Dung",
     "updateLessonDetail": "Cập nhật chi tiết bài học",
@@ -16,10 +16,14 @@
     "exampleSection": "Ví dụ",
     "rememberSection": "Ghi nhớ",
     "content": "Nội dung",
+    "contentVi": "Nội dung (Tiếng Việt)",
+    "contentEn": "Nội dung (Tiếng Anh)",
     "inputContentVi": "Nhập Nội dung (Tiếng Việt)",
     "inputContentEn": "Nhập Nội dung (Tiếng Anh)",
-    "contentViRequired": "Nội dung (Tiếng Việt) là bắt buộc",
-    "contentEnRequired": "Nội dung (Tiếng Anh) là bắt buộc",
+    "contentViRequired": "Nội dung (Tiếng Việt) là bắt buộc.",
+    "contentEnRequired": "Nội dung (Tiếng Anh) là bắt buộc.",
+    "contentViLength": "Nội dung (Tiếng Việt) phải có ít nhất 10 ký tự.",
+    "contentEnLength": "Nội dung (Tiếng Anh) phải có ít nhất 10 ký tự.",
     "image": "Hình ảnh",
     "lesson": "Bài học",
     "inputImage": "Tải lên Hình ảnh"

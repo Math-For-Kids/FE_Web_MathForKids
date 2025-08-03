@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Input,
@@ -11,8 +12,9 @@ import {
   Switch,
   Flex,
   Spin,
+  Empty,
 } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, DownOutlined } from "@ant-design/icons";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { FaEdit, FaPlus } from "react-icons/fa";
 import { Upload } from "antd";
@@ -26,7 +28,9 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import DOMPurify from "dompurify";
 
 const LessonDetail = () => {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLessonDetail, setEditingLessonDetail] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -40,7 +44,7 @@ const LessonDetail = () => {
   const [visibleLessonDetail, setVisibleLessonDetail] = useState([]);
   const [nextPageToken, setNextPageToken] = useState(null);
   const [countAll, setCountAll] = useState("");
-  const [countAllLD, setCountAllLD] = useState("");
+  const [countAllLD, setCountAllLD] = useState(1);
   const [editorKey, setEditorKey] = useState(0); // Added to force CKEditor re-mount
   const pageSize = 20;
   const { t, i18n } = useTranslation(["lessondetail", "common"]);
@@ -83,6 +87,7 @@ const LessonDetail = () => {
         setTimeout(() => setLoading(false), 0);
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -122,6 +127,7 @@ const LessonDetail = () => {
       setNextPageToken(response.data.nextPageToken || null);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -157,6 +163,7 @@ const LessonDetail = () => {
       setNextPageToken(response.data.nextPageToken || null);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -173,6 +180,7 @@ const LessonDetail = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -185,6 +193,7 @@ const LessonDetail = () => {
       setLesson(response.data);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -193,66 +202,110 @@ const LessonDetail = () => {
 
   const Validation = (data) => {
     const newErrors = {};
+
     if (!data?.order || isNaN(data.order) || data.order < 1) {
       newErrors.order = t("orderRequired");
     }
+
+    // Title
     if (!data?.title?.vi || data.title.vi.trim() === "") {
       newErrors.title = t("titleRequired");
     }
+
+    // Content Vi
     const viContent = data?.content?.vi
       ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
       .trim();
     if (!viContent || viContent === "") {
       newErrors.contentVi = t("contentViRequired");
-    }
+    } else if (viContent.length < 3) newErrors.contentVi = t("contentViLength");
+
+    // Content En
     const enContent = data?.content?.en
       ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
       .trim();
     if (!enContent || enContent === "") {
       newErrors.contentEn = t("contentEnRequired");
-    }
+    } else if (enContent.length < 3) newErrors.contentVi = t("contentEnLength");
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const ValidationFullLesson = (data) => {
     const newErrors = {};
+
+    //
     const defineVi = data?.contents?.define?.vi
-      ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
+      ?.replace(
+        /<div style="font-size: 18px; line-height: 1.5;"><p>|<\/p><\/div>/g,
+        ""
+      )
       .trim();
     if (!defineVi || defineVi === "") {
       newErrors.defineVi = t("contentViRequired");
-    }
+    } else if (defineVi.length < 10) newErrors.defineVi = t("contentViLength");
+    console.log(data?.contents?.define?.vi);
+    console.log(defineVi);
+
+    //
     const defineEn = data?.contents?.define?.en
-      ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
+      ?.replace(
+        /<div style="font-size: 18px; line-height: 1.5;"><p>|<\/p><\/div>/g,
+        ""
+      )
       .trim();
     if (!defineEn || defineEn === "") {
       newErrors.defineEn = t("contentEnRequired");
-    }
+    } else if (defineEn.length < 10) newErrors.defineEn = t("contentEnLength");
+
+    //
     const exampleVi = data?.contents?.example?.vi
-      ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
+      ?.replace(
+        /<div style="font-size: 18px; line-height: 1.5;"><p>|<\/p><\/div>/g,
+        ""
+      )
       .trim();
     if (!exampleVi || exampleVi === "") {
       newErrors.exampleVi = t("contentViRequired");
-    }
+    } else if (exampleVi.length < 10)
+      newErrors.exampleVi = t("contentViLength");
+
+    //
     const exampleEn = data?.contents?.example?.en
-      ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
+      ?.replace(
+        /<div style="font-size: 18px; line-height: 1.5;"><p>|<\/p><\/div>/g,
+        ""
+      )
       .trim();
     if (!exampleEn || exampleEn === "") {
       newErrors.exampleEn = t("contentEnRequired");
-    }
+    } else if (exampleEn.length < 10)
+      newErrors.exampleEn = t("contentEnLength");
+
+    //
     const rememberVi = data?.contents?.remember?.vi
-      ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
+      ?.replace(
+        /<div style="font-size: 18px; line-height: 1.5;"><p>|<\/p><\/div>/g,
+        ""
+      )
       .trim();
     if (!rememberVi || rememberVi === "") {
       newErrors.rememberVi = t("contentViRequired");
-    }
+    } else if (rememberVi.length < 10)
+      newErrors.rememberVi = t("contentViLength");
+
+    //
     const rememberEn = data?.contents?.remember?.en
-      ?.replace(/<div style="font-size: 18px; line-height: 1.5;">|<\/div>/g, "")
+      ?.replace(
+        /<div style="font-size: 18px; line-height: 1.5;"><p>|<\/p><\/div>/g,
+        ""
+      )
       .trim();
     if (!rememberEn || rememberEn === "") {
       newErrors.rememberEn = t("contentEnRequired");
-    }
+    } else if (rememberEn.length < 10)
+      newErrors.rememberEn = t("contentEnLength");
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -260,6 +313,7 @@ const LessonDetail = () => {
   const handleSave = async () => {
     if (creationMode === "single") {
       if (Validation(editingLessonDetail)) {
+        setLoadingSave(true);
         try {
           const formData = new FormData();
           formData.append("lessonId", editingLessonDetail.lessonId);
@@ -278,12 +332,16 @@ const LessonDetail = () => {
             await api.put(`/lessondetail/${editingLessonDetail.id}`, formData, {
               headers: { "Content-Type": "multipart/form-data" },
             });
-            toast.success(t("updateSuccess", { ns: "common" }));
+            toast.success(t("updateSuccess", { ns: "common" }), {
+              theme: user?.mode === "dark" ? "dark" : "light",
+            });
           } else {
             await api.post(`/lessondetail`, formData, {
               headers: { "Content-Type": "multipart/form-data" },
             });
-            toast.success(t("addSuccess", { ns: "common" }));
+            toast.success(t("addSuccess", { ns: "common" }), {
+              theme: user?.mode === "dark" ? "dark" : "light",
+            });
           }
           setLessonDetails([]);
           setVisibleLessonDetail([]);
@@ -296,18 +354,17 @@ const LessonDetail = () => {
           closeModal();
         } catch (error) {
           toast.error(error.response?.data?.message?.[i18n.language], {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           });
+        } finally {
+          setLoadingSave(false);
         }
-      } else {
-        toast.error(t("validationFailed", { ns: "common" }), {
-          position: "top-right",
-          autoClose: 3000,
-        });
       }
     } else if (creationMode === "full") {
       if (ValidationFullLesson(editingLessonDetail)) {
+        setLoadingSave(true);
         try {
           const formData = new FormData();
           formData.append("lessonId", editingLessonDetail.lessonId);
@@ -327,19 +384,19 @@ const LessonDetail = () => {
           await api.post(`/lessondetail/full`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-          toast.success(t("addFullLessonSuccess", { ns: "common" }));
+          toast.success(t("addFullLessonSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
+          });
           closeModal();
         } catch (error) {
           toast.error(error.response?.data?.message?.[i18n.language], {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           });
+        } finally {
+          setLoadingSave(false);
         }
-      } else {
-        toast.error(t("validationFailed", { ns: "common" }), {
-          position: "top-right",
-          autoClose: 3000,
-        });
       }
     }
   };
@@ -452,6 +509,7 @@ const LessonDetail = () => {
         isDisabled: !lessonDetail.isDisabled,
       });
       toast.success(t("updateSuccess", { ns: "common" }), {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 2000,
       });
@@ -471,6 +529,7 @@ const LessonDetail = () => {
       );
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -503,12 +562,14 @@ const LessonDetail = () => {
       title: t(".no"),
       dataIndex: "order",
       key: "order",
-      width: 100,
+      width: 80,
+      align: "center",
     },
     {
       title: t("title"),
       dataIndex: "title",
       key: "title",
+      width: 200,
       render: (title) => title?.[i18n.language] || "",
     },
     {
@@ -548,13 +609,16 @@ const LessonDetail = () => {
             }}
           />
         ) : (
-          <span>{t("image")}</span>
+          <span style={{ width: 60, opacity: 0.5 }}>
+            {t("none", { ns: "common" })}
+          </span>
         ),
     },
     {
       title: t("action", { ns: "common" }),
       key: "action",
       align: "center",
+      width: 150,
       render: (_, record) => (
         <button
           className="text-white px-3 py-1 buttonupdate"
@@ -572,6 +636,7 @@ const LessonDetail = () => {
       dataIndex: "isDisabled",
       key: "isDisabled",
       align: "center",
+      width: 120,
       render: (isDisabled, record) => (
         <Switch
           checked={!isDisabled}
@@ -608,7 +673,7 @@ const LessonDetail = () => {
                 </div>
             </div> */}
       <div className="containers-content">
-        <div className="filter-bar mb-2">
+        <div className="filter-bar">
           <div className="filter-containers">
             <span className="filter-icon">
               <svg
@@ -629,6 +694,9 @@ const LessonDetail = () => {
               </button>
             </span>
             <Select
+              suffixIcon={
+                <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+              }
               className="filter-dropdown"
               value={filterStatus}
               onChange={(value) => setFilterStatus(value)}
@@ -649,7 +717,7 @@ const LessonDetail = () => {
               + {t("addNew", { ns: "common" })}
             </Button> */}
             {countAllLD == 0 && (
-              <Button
+              <button
                 className="rounded-add"
                 onClick={() => openModal("addFull")}
               >
@@ -657,7 +725,7 @@ const LessonDetail = () => {
                   <FaPlus />
                   <span>{t("addFullLesson")}</span>
                 </Flex>
-              </Button>
+              </button>
             )}
           </div>
         </div>
@@ -666,7 +734,7 @@ const LessonDetail = () => {
           <Flex
             justify="center"
             align="center"
-            style={{ height: "calc(100vh - 255px)" }}
+            style={{ height: "calc(100vh - 249px)" }}
           >
             <Spin
               indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
@@ -679,7 +747,24 @@ const LessonDetail = () => {
             pagination={false}
             rowKey="id"
             className="custom-table"
-            scroll={{ y: "calc(100vh - 330px)" }}
+            scroll={{ y: "calc(100vh - 324px)" }}
+            style={{ height: "calc(100vh - 249px)" }}
+            locale={{
+              emptyText: (
+                <Flex
+                  justify="center"
+                  align="center"
+                  style={{ height: "calc(100vh - 379px)" }}
+                >
+                  <div>
+                    <Empty
+                      description={t("nodata", { ns: "common" })}
+                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                    ></Empty>
+                  </div>
+                </Flex>
+              ),
+            }}
           />
         )}
         {/* <div className="paginations">
@@ -704,10 +789,11 @@ const LessonDetail = () => {
           onCancel={closeModal}
           footer={null}
           className="modal-content"
+          centered
         >
           {creationMode === "single" ? (
             <div className="form-content-lesson">
-              <div className="inputtext">
+              {/* <div className="inputtext">
                 <label className="titleinput">
                   {t("order")} <span style={{ color: "red" }}>*</span>
                 </label>
@@ -725,8 +811,8 @@ const LessonDetail = () => {
                 {errors.order && (
                   <div className="error-text">{errors.order}</div>
                 )}
-              </div>
-              <div className="inputtext">
+              </div> */}
+              {/* <div className="inputtext">
                 <label className="titleinput">
                   {t("title")} <span style={{ color: "red" }}>*</span>
                 </label>
@@ -749,51 +835,23 @@ const LessonDetail = () => {
                 {errors.title && (
                   <div className="error-text">{errors.title}</div>
                 )}
-              </div>
-              <div className="inputtext">
-                <label className="titleinput">{t("image")}</label>
-                <Upload
-                  accept="image/*"
-                  showUploadList={false}
-                  beforeUpload={() => false}
-                  onChange={handleImageChange}
-                  fileList={fileList}
-                >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="custom-upload-button"
-                  >
-                    {t("inputImage")}
-                  </Button>
-                </Upload>
-                {imageUrl && (
-                  <div className="image-preview-box">
-                    <Image
-                      src={imageUrl}
-                      alt="Preview"
-                      className="preview-image"
-                    />
-                    <DeleteOutlined
-                      onClick={handleRemoveImage}
-                      style={{
-                        position: "absolute",
-                        top: 8,
-                        right: 8,
-                        fontSize: 20,
-                        color: "#ff4d4f",
-                        cursor: "pointer",
-                        background: "#fff",
-                        borderRadius: "50%",
-                        padding: 4,
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+              </div> */}
+              <h5
+                style={{
+                  marginTop: "15px",
+                  textAlign: "center",
+                  color: "var(--color-text)",
+                }}
+              >
+                {editingLessonDetail?.title?.en == "Define"
+                  ? t("defineSection")
+                  : editingLessonDetail?.title?.en == "Exercise"
+                  ? t("exampleSection")
+                  : t("rememberSection")}
+              </h5>
               <div className="inputtext">
                 <label className="titleinput">
-                  {t("content")} (Vietnamese){" "}
-                  <span style={{ color: "red" }}>*</span>
+                  {t("contentVi")} <span style={{ color: "red" }}>*</span>
                 </label>
                 <CKEditor
                   key={`vi-editor-${editorKey}`}
@@ -836,8 +894,7 @@ const LessonDetail = () => {
               </div>
               <div className="inputtext">
                 <label className="titleinput">
-                  {t("content")} (English){" "}
-                  <span style={{ color: "red" }}>*</span>
+                  {t("contentEn")} <span style={{ color: "red" }}>*</span>
                 </label>
                 <CKEditor
                   key={`en-editor-${editorKey}`}
@@ -878,18 +935,60 @@ const LessonDetail = () => {
                   <div className="error-text">{errors.contentEn}</div>
                 )}
               </div>
+              <div className="inputtext">
+                <label className="titleinput">{t("image")}</label>
+                <Flex>
+                  <Upload
+                    accept="image/*"
+                    showUploadList={false}
+                    beforeUpload={() => false}
+                    onChange={handleImageChange}
+                    fileList={fileList}
+                  >
+                    <button className="buttondetail">
+                      <Flex justify="center" align="center">
+                        <UploadOutlined className="iconupdate" />
+                        <span>{t("inputImage")}</span>
+                      </Flex>
+                    </button>
+                  </Upload>
+                  {imageUrl && (
+                    <div className="image-preview-box">
+                      <Image
+                        src={imageUrl}
+                        alt="Preview"
+                        className="preview-image"
+                      />
+                      <DeleteOutlined
+                        onClick={handleRemoveImage}
+                        style={{
+                          position: "absolute",
+                          top: 8,
+                          right: 8,
+                          fontSize: 20,
+                          color: "var(--error-text)",
+                          cursor: "pointer",
+                          background: "var(--color-bg-container)",
+                          borderRadius: "50%",
+                          padding: 4,
+                        }}
+                      />
+                    </div>
+                  )}
+                </Flex>
+              </div>
             </div>
           ) : (
             <div className="form-content-lesson">
-              <h4 style={{ marginTop: "15px", textAlign: "center" }}>
+              <h5 style={{ marginTop: "15px", textAlign: "center" }}>
                 {t("defineSection")}
-              </h4>
+              </h5>
               <div className="inputtext">
                 <label className="titleinput">
-                  {t("content")} (Vietnamese){" "}
-                  <span style={{ color: "red" }}>*</span>
+                  {t("contentVi")} <span style={{ color: "red" }}>*</span>
                 </label>
                 <CKEditor
+                  style={{ backgroundColor: "var(--date-picker-bg)" }}
                   key={`define-vi-editor-${editorKey}`}
                   editor={ClassicEditor}
                   data={
@@ -933,8 +1032,7 @@ const LessonDetail = () => {
               </div>
               <div className="inputtext">
                 <label className="titleinput">
-                  {t("content")} (English){" "}
-                  <span style={{ color: "red" }}>*</span>
+                  {t("contentEn")} <span style={{ color: "red" }}>*</span>
                 </label>
                 <CKEditor
                   key={`define-en-editor-${editorKey}`}
@@ -980,33 +1078,36 @@ const LessonDetail = () => {
               </div>
               <div className="inputtext">
                 <label className="titleinput">{t("image")}</label>
-                <Upload
-                  accept="image/*"
-                  showUploadList={false}
-                  beforeUpload={() => false}
-                  onChange={(info) => handleImageChange(info, "define")}
-                  fileList={fileList.define}
-                >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="custom-upload-button"
+                <Flex>
+                  <Upload
+                    accept="image/*"
+                    showUploadList={false}
+                    beforeUpload={() => false}
+                    onChange={(info) => handleImageChange(info, "define")}
+                    fileList={fileList.define}
                   >
-                    {t("inputImage")}
-                  </Button>
-                </Upload>
-                {fileList.define?.[0]?.url && (
-                  <div className="image-preview-box">
-                    <Image
-                      src={fileList.define[0].url}
-                      alt="Define Preview"
-                      className="preview-image"
-                    />
-                  </div>
-                )}
+                    <button className="buttondetail">
+                      <Flex justify="center" align="center">
+                        <UploadOutlined className="iconupdate" />
+                        <span>{t("inputImage")}</span>
+                      </Flex>
+                    </button>
+                  </Upload>
+                  {fileList.define?.[0]?.url && (
+                    <div className="image-preview-box">
+                      <Image
+                        src={fileList.define[0].url}
+                        alt="Define Preview"
+                        className="preview-image"
+                      />
+                    </div>
+                  )}
+                </Flex>
               </div>
-              <h4 style={{ marginTop: "15px", textAlign: "center" }}>
+              <hr style={{ margin: "50px" }} />
+              <h5 style={{ marginTop: "15px", textAlign: "center" }}>
                 {t("exampleSection")}
-              </h4>
+              </h5>
               <div className="inputtext">
                 <label className="titleinput">
                   {t("content")} (Vietnamese){" "}
@@ -1103,33 +1204,36 @@ const LessonDetail = () => {
               </div>
               <div className="inputtext">
                 <label className="titleinput">{t("image")}</label>
-                <Upload
-                  accept="image/*"
-                  showUploadList={false}
-                  beforeUpload={() => false}
-                  onChange={(info) => handleImageChange(info, "example")}
-                  fileList={fileList.example}
-                >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="custom-upload-button"
+                <Flex>
+                  <Upload
+                    accept="image/*"
+                    showUploadList={false}
+                    beforeUpload={() => false}
+                    onChange={(info) => handleImageChange(info, "example")}
+                    fileList={fileList.example}
                   >
-                    {t("inputImage")}
-                  </Button>
-                </Upload>
-                {fileList.example?.[0]?.url && (
-                  <div className="image-preview-box">
-                    <Image
-                      src={fileList.example[0].url}
-                      alt="Example Preview"
-                      className="preview-image"
-                    />
-                  </div>
-                )}
+                    <Button
+                      icon={<UploadOutlined />}
+                      className="custom-upload-button"
+                    >
+                      {t("inputImage")}
+                    </Button>
+                  </Upload>
+                  {fileList.example?.[0]?.url && (
+                    <div className="image-preview-box">
+                      <Image
+                        src={fileList.example[0].url}
+                        alt="Example Preview"
+                        className="preview-image"
+                      />
+                    </div>
+                  )}
+                </Flex>
               </div>
-              <h4 style={{ marginTop: "15px", textAlign: "center" }}>
+              <hr style={{ margin: "50px" }} />
+              <h5 style={{ marginTop: "15px", textAlign: "center" }}>
                 {t("rememberSection")}
-              </h4>
+              </h5>
               <div className="inputtext">
                 <label className="titleinput">
                   {t("content")} (Vietnamese){" "}
@@ -1226,29 +1330,31 @@ const LessonDetail = () => {
               </div>
               <div className="inputtext">
                 <label className="titleinput">{t("image")}</label>
-                <Upload
-                  accept="image/*"
-                  showUploadList={false}
-                  beforeUpload={() => false}
-                  onChange={(info) => handleImageChange(info, "remember")}
-                  fileList={fileList.remember}
-                >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="custom-upload-button"
+                <Flex>
+                  <Upload
+                    accept="image/*"
+                    showUploadList={false}
+                    beforeUpload={() => false}
+                    onChange={(info) => handleImageChange(info, "remember")}
+                    fileList={fileList.remember}
                   >
-                    {t("inputImage")}
-                  </Button>
-                </Upload>
-                {fileList.remember?.[0]?.url && (
-                  <div className="image-preview-box">
-                    <Image
-                      src={fileList.remember[0].url}
-                      alt="Remember Preview"
-                      className="preview-image"
-                    />
-                  </div>
-                )}
+                    <button className="buttondetail">
+                      <Flex justify="center" align="center">
+                        <UploadOutlined className="iconupdate" />
+                        <span>{t("inputImage")}</span>
+                      </Flex>
+                    </button>
+                  </Upload>
+                  {fileList.remember?.[0]?.url && (
+                    <div className="image-preview-box">
+                      <Image
+                        src={fileList.remember[0].url}
+                        alt="Remember Preview"
+                        className="preview-image"
+                      />
+                    </div>
+                  )}
+                </Flex>
               </div>
             </div>
           )}
@@ -1256,9 +1362,22 @@ const LessonDetail = () => {
             <Button className="cancel-button" onClick={closeModal} block>
               {t("cancel", { ns: "common" })}
             </Button>
-            <Button className="save-button" onClick={handleSave} block>
-              {t("save", { ns: "common" })}
-            </Button>
+            {loadingSave ? (
+              <Button className="save-button">
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: 20, color: "#fff" }}
+                      spin
+                    />
+                  }
+                />
+              </Button>
+            ) : (
+              <Button className="save-button" onClick={handleSave} block>
+                {t("save", { ns: "common" })}
+              </Button>
+            )}
           </div>
         </Modal>
       </div>

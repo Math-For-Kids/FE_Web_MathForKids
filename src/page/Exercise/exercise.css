@@ -6,7 +6,7 @@
     scrollbar-color: #a0a0a0 transparent;
 }
 
-.table-container-exercise {
+/* .table-container-exercise {
     max-height: calc(100vh - 250px);
     min-height: 300px;
     overflow-y: auto;
@@ -22,10 +22,47 @@
     width: 100%;
     scrollbar-width: thin;
     scrollbar-color: #B8B8B9 transparent;
+} */
+
+/* .table-container-exercise tbody tr:hover>td {
+    background-color: var(--background-hover) !important;
+} */
+
+/* Container cho modal chi tiết */
+.form-content-assessment-detail {
+    padding: 20px;
+    background-color: var(--color-bg-container);
+    border-radius: 8px;
+    max-height: 70vh;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 
-.table-container-exercise tbody tr:hover>td {
-    background-color: var(--background-hover) !important;
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: var(--date-picker-bg);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.detail-label {
+    width: 150px;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 14px;
+    margin-right: 16px;
+    line-height: 1.5;
+}
+
+.detail-content {
+    flex: 1;
+    font-size: 14px;
+    color: var(--color-text);
+    line-height: 1.5;
 }
 
 .inputtexts {

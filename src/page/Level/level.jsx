@@ -1,7 +1,18 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import { Input, Button, Select, Modal, Table, Switch, Flex, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import {
+  Input,
+  Button,
+  Select,
+  Modal,
+  Table,
+  Switch,
+  Flex,
+  Spin,
+  Empty,
+} from "antd";
+import { LoadingOutlined, DownOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -13,8 +24,10 @@ import "./level.css";
 const { Option } = Select;
 
 const Level = () => {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLevel, setEditingLevel] = useState(null);
   const [levelsData, setLevelsData] = useState([]);
@@ -69,6 +82,7 @@ const Level = () => {
           error.response?.data?.message?.[i18n.language] ||
             "Error fetching levels",
           {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           }
@@ -109,6 +123,7 @@ const Level = () => {
           error.response?.data?.message?.[i18n.language] ||
             "Error fetching levels",
           {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           }
@@ -148,6 +163,7 @@ const Level = () => {
         setTimeout(() => setLoading(false), 0);
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -167,6 +183,7 @@ const Level = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -177,18 +194,25 @@ const Level = () => {
 
   const validateForm = useCallback(() => {
     const newErrors = {};
-    if (!editingLevel?.name?.vi || editingLevel.name.vi.trim() === "") {
+    // Name Vi
+    if (!editingLevel?.name?.vi || editingLevel.name.vi.trim() === "")
       newErrors.nameVi = t("nameViRequired");
-    }
-    if (!editingLevel?.name?.en || editingLevel.name.en.trim() === "") {
+    else if (editingLevel.name.vi.trim().length < 2)
+      newErrors.nameVi = t("nameViMinLength");
+
+    //Name En
+    if (!editingLevel?.name?.en || editingLevel.name.en.trim() === "")
       newErrors.nameEn = t("nameEnRequired");
-    }
+    else if (editingLevel.name.en.trim().length < 3)
+      newErrors.nameEn = t("nameEnMinLength");
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [editingLevel, t]);
 
   const handleSave = useCallback(async () => {
     if (validateForm()) {
+      setLoadingSave(true);
       try {
         const { id, ...payload } = editingLevel;
         payload.name = {
@@ -200,6 +224,7 @@ const Level = () => {
         if (editingLevel?.id) {
           await api.patch(`/level/${editingLevel.id}`, payload);
           toast.success(t("updateSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 2000,
           });
@@ -213,6 +238,7 @@ const Level = () => {
           payload.level = maxLevel + 1;
           await api.post(`/level`, payload);
           toast.success(t("addSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 2000,
           });
@@ -230,16 +256,14 @@ const Level = () => {
           error.response?.data?.message?.[i18n.language] ||
             "Error saving level",
           {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           }
         );
+      } finally {
+        setLoadingSave(false);
       }
-    } else {
-      toast.error(t("validationFailed", { ns: "common" }), {
-        position: "top-right",
-        autoClose: 2000,
-      });
     }
   }, [editingLevel, filterStatus, fetchLevels, i18n.language, t, validateForm]);
 
@@ -251,6 +275,7 @@ const Level = () => {
           isDisabled: updatedLevel.isDisabled,
         });
         toast.success(t("updateSuccess", { ns: "common" }), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
@@ -264,6 +289,7 @@ const Level = () => {
           error.response?.data?.message?.[i18n.language] ||
             "Error updating status",
           {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           }
@@ -290,6 +316,7 @@ const Level = () => {
           });
         } catch (error) {
           toast.error(t("fetchLevelsFailed", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 3000,
           });
@@ -329,11 +356,13 @@ const Level = () => {
         );
         await Promise.all(updatePromises);
         toast.success(t("updateOrderSuccess"), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
       } catch (error) {
         toast.error(t("updateOrderFailed"), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -524,6 +553,9 @@ const Level = () => {
               </button>
             </span>
             <Select
+              suffixIcon={
+                <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+              }
               className="filter-dropdown"
               value={filterStatus}
               onChange={(value) => setFilterStatus(value)}
@@ -547,10 +579,12 @@ const Level = () => {
                 {isDragEnabled ? t("disableDrag") : t("enableDrag")}
               </Button>
             )}
-            <Button className="rounded-add" onClick={() => openModal("add")}>
-              <FaPlus className="inline mr-2" />
-              {t("addNew", { ns: "common" })}
-            </Button>
+            <button className="rounded-add" onClick={() => openModal("add")}>
+              <Flex justify="center" align="center" gap="small">
+                <FaPlus />
+                <span>{t("addNew", { ns: "common" })}</span>
+              </Flex>
+            </button>
           </div>
         </div>
 
@@ -578,6 +612,7 @@ const Level = () => {
                     rowKey="id"
                     className="custom-table custom-table-drag"
                     scroll={{ y: "calc(100vh - 300px)" }}
+                    style={{ height: "calc(100vh - 225px)" }}
                     components={{
                       body: {
                         row: ({ children, ...props }) => {
@@ -657,6 +692,23 @@ const Level = () => {
                 rowKey="id"
                 className="custom-table"
                 scroll={{ y: "calc(100vh - 300px)" }}
+                style={{ height: "calc(100vh - 225px)" }}
+                locale={{
+                  emptyText: (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      style={{ height: "calc(100vh - 355px)" }}
+                    >
+                      <div>
+                        <Empty
+                          description={t("nodata", { ns: "common" })}
+                          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                        ></Empty>
+                      </div>
+                    </Flex>
+                  ),
+                }}
               />
             )}
           </>
@@ -680,12 +732,12 @@ const Level = () => {
           onCancel={closeModal}
           footer={null}
           className="modal-content"
+          centered
         >
           <div className="form-content-level">
             <div className="inputtext">
               <label className="titleinput">
-                {t("levelName")} (Vietnamese){" "}
-                <span style={{ color: "red" }}>*</span>
+                {t("levelNameVi")} <span style={{ color: "red" }}>*</span>
               </label>
               <Input
                 placeholder={t("inputLevelNameVi")}
@@ -696,6 +748,12 @@ const Level = () => {
                     name: { ...editingLevel?.name, vi: e.target.value },
                   })
                 }
+                styles={{
+                  input: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.nameVi ? "error" : ""}
               />
               {errors.nameVi && (
                 <div className="error-text">{errors.nameVi}</div>
@@ -703,8 +761,7 @@ const Level = () => {
             </div>
             <div className="inputtext">
               <label className="titleinput">
-                {t("levelName")} (English){" "}
-                <span style={{ color: "red" }}>*</span>
+                {t("levelNameEn")} <span style={{ color: "red" }}>*</span>
               </label>
               <Input
                 placeholder={t("inputLevelNameEn")}
@@ -715,6 +772,12 @@ const Level = () => {
                     name: { ...editingLevel?.name, en: e.target.value },
                   })
                 }
+                styles={{
+                  input: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.nameEn ? "error" : ""}
               />
               {errors.nameEn && (
                 <div className="error-text">{errors.nameEn}</div>
@@ -725,9 +788,22 @@ const Level = () => {
             <Button className="cancel-button" onClick={closeModal} block>
               {t("cancel", { ns: "common" })}
             </Button>
-            <Button className="save-button" onClick={handleSave} block>
-              {t("save", { ns: "common" })}
-            </Button>
+            {loadingSave ? (
+              <Button className="save-button">
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: 20, color: "#fff" }}
+                      spin
+                    />
+                  }
+                />
+              </Button>
+            ) : (
+              <Button className="save-button" onClick={handleSave} block>
+                {t("save", { ns: "common" })}
+              </Button>
+            )}
           </div>
         </Modal>
       </div>

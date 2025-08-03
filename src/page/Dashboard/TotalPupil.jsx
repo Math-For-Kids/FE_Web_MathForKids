@@ -35,7 +35,7 @@ export default function TotalPupil() {
           style={{
             height: 100,
             width: 20,
-            backgroundColor: "#EF4444",
+            backgroundColor: "var(--total-pupil-tag)",
             borderTopLeftRadius: 6,
             borderBottomLeftRadius: 6,
           }}
@@ -68,10 +68,10 @@ export default function TotalPupil() {
                 }
               />
             </div>
-            <div className="card-icon" style={{ backgroundColor: "#fef3c7" }}>
+            <div className="card-icon" style={{ backgroundColor: "var(--total-pupil-icon-bg)" }}>
               <svg
                 className="w-6 h-6"
-                fill="#fcd34d"
+                fill="var(--total-pupil-icon)"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >

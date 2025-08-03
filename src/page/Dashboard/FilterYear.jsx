@@ -22,6 +22,11 @@ export default function FilterYear({
         return current && current > today.endOf("year");
       }}
       allowClear={false}
+      styles={{
+        root: {
+          backgroundColor: "var(--date-picker-bg)",
+        },
+      }}
     />
   );
 }

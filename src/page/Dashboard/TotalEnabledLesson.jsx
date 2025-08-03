@@ -35,7 +35,7 @@ export default function TotalEnabledLesson() {
           style={{
             height: 100,
             width: 20,
-            backgroundColor: "#007BFF",
+            backgroundColor: "var(--total-lesson-tag)",
             borderTopLeftRadius: 6,
             borderBottomLeftRadius: 6,
           }}
@@ -68,9 +68,9 @@ export default function TotalEnabledLesson() {
                 }
               />
             </div>
-            <div className="card-icon" style={{ backgroundColor: "#D1FAE5" }}>
+            <div className="card-icon" style={{ backgroundColor: "var(--total-lesson-icon-bg)" }}>
               <svg
-                fill="#34D399"
+                fill="var(--total-lesson-icon)"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >

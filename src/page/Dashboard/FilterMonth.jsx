@@ -22,6 +22,11 @@ export default function FilterMonth({
         return current && current > today.endOf("month");
       }}
       allowClear={false}
+      styles={{
+        root: {
+          backgroundColor: "var(--date-picker-bg)",
+        },
+      }}
     />
   );
 }

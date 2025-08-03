@@ -95,8 +95,8 @@ const Login = () => {
               </div>
             </div>
             <div className="buttonlogins">
-              <Button className="buttonlogin" htmlType="submit">
-                {loading ? (
+              {loading ? (
+                <div className="buttonlogin">
                   <Spin
                     indicator={
                       <LoadingOutlined
@@ -105,10 +105,12 @@ const Login = () => {
                       />
                     }
                   />
-                ) : (
-                  "Login"
-                )}
-              </Button>
+                </div>
+              ) : (
+                <Button className="buttonlogin" htmlType="submit">
+                  Login
+                </Button>
+              )}
             </div>
           </div>
         </form>

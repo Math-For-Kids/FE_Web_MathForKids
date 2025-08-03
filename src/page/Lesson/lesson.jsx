@@ -1,7 +1,18 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import { Input, Button, Select, Modal, Table, Switch, Flex, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import {
+  Input,
+  Button,
+  Select,
+  Modal,
+  Table,
+  Switch,
+  Flex,
+  Spin,
+  Empty,
+} from "antd";
+import { LoadingOutlined, DownOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -22,8 +33,10 @@ import "./lesson.css";
 const { Option } = Select;
 
 const Lesson = () => {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLesson, setEditingLesson] = useState(null);
   const [lessonsData, setLessonsData] = useState([]);
@@ -98,6 +111,7 @@ const Lesson = () => {
         setNextPageToken(response.data.nextPageToken || null);
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -135,6 +149,7 @@ const Lesson = () => {
         setNextPageToken(response.data.nextPageToken || null);
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -178,6 +193,7 @@ const Lesson = () => {
         setTimeout(() => setLoading(false), 0);
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -202,6 +218,7 @@ const Lesson = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -220,6 +237,7 @@ const Lesson = () => {
 
   const handleSave = useCallback(async () => {
     if (validateForm()) {
+      setLoadingSave(true);
       try {
         const { id, ...payload } = editingLesson;
         payload.name = {
@@ -255,6 +273,7 @@ const Lesson = () => {
 
           await api.patch(`/lesson/${editingLesson.id}`, payload);
           toast.success(t("updateSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 2000,
           });
@@ -271,6 +290,7 @@ const Lesson = () => {
           payload.order = maxOrder + 1;
           await api.post(`/lesson`, payload);
           toast.success(t("addSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 2000,
           });
@@ -293,15 +313,13 @@ const Lesson = () => {
         closeModal();
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
+      } finally {
+        setLoadingSave(false);
       }
-    } else {
-      toast.error(t("validationFailed", { ns: "common" }), {
-        position: "top-right",
-        autoClose: 2000,
-      });
     }
   }, [
     editingLesson,
@@ -324,6 +342,7 @@ const Lesson = () => {
           isDisabled: updatedLesson.isDisabled,
         });
         toast.success(t("updateSuccess", { ns: "common" }), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
@@ -334,6 +353,7 @@ const Lesson = () => {
         );
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -344,21 +364,28 @@ const Lesson = () => {
 
   const validateForm = useCallback(() => {
     const newErrors = {};
+    // Name Vi
     if (!editingLesson?.name?.vi || editingLesson.name.vi.trim() === "") {
       newErrors.nameVi = t("nameViRequired");
     } else if (editingLesson.name.vi.trim().length < 3) {
       newErrors.nameVi = t("nameViMinLength");
     }
+
+    // Name En
     if (!editingLesson?.name?.en || editingLesson.name.en.trim() === "") {
       newErrors.nameEn = t("nameEnRequired");
     } else if (editingLesson.name.en.trim().length < 3) {
       newErrors.nameEn = t("nameEnMinLength");
     }
+
+    // Grade
     if (!editingLesson?.grade || editingLesson.grade === "") {
       newErrors.grade = t("gradeRequired");
     } else if (!["1", "2", "3"].includes(String(editingLesson.grade))) {
       newErrors.grade = t("gradeInvalid");
     }
+
+    // Type
     if (!editingLesson?.type || editingLesson.type === "") {
       newErrors.type = t("typeRequired");
     }
@@ -416,11 +443,13 @@ const Lesson = () => {
         );
         await Promise.all(updatePromises);
         toast.success(t("updateOrderSuccess", { ns: "common" }), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
       } catch (error) {
         toast.error(t("updateOrderFailed", { ns: "common" }), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -615,6 +644,9 @@ const Lesson = () => {
               </button>
             </span>
             <Select
+              suffixIcon={
+                <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+              }
               className="filter-dropdown"
               value={selectedGrade}
               onChange={(value) => {
@@ -627,16 +659,21 @@ const Lesson = () => {
                 }
               }}
               placeholder={t("grade")}
+              style={{ minWidth: "120px" }}
             >
               <Select.Option value={1}>{t("grade")} 1</Select.Option>
               <Select.Option value={2}>{t("grade")} 2</Select.Option>
               <Select.Option value={3}>{t("grade")} 3</Select.Option>
             </Select>
             <Select
+              suffixIcon={
+                <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+              }
               className="filter-dropdown"
               value={filterType}
               onChange={(value) => setFilterType(value)}
               placeholder={t("type")}
+              style={{ minWidth: "120px" }}
             >
               {lessonTypes
                 .filter((type) => {
@@ -655,6 +692,9 @@ const Lesson = () => {
                 ))}
             </Select>
             <Select
+              suffixIcon={
+                <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+              }
               className="filter-dropdown"
               value={filterStatus}
               onChange={(value) => setFilterStatus(value)}
@@ -680,16 +720,16 @@ const Lesson = () => {
                 }`}
                 onClick={toggleDrag}
               >
-                <FaArrowsAlt style={{ marginRight: "8px" }} />
+                <FaArrowsAlt className="inline mr-2" />
                 {isDragEnabled ? t("disableDrag") : t("enableDrag")}
               </Button>
             )}
-            <Button className="rounded-add" onClick={() => openModal("add")}>
+            <button className="rounded-add" onClick={() => openModal("add")}>
               <Flex justify="center" align="center" gap="small">
                 <FaPlus />
                 <span>{t("addNew", { ns: "common" })}</span>
               </Flex>
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -717,6 +757,7 @@ const Lesson = () => {
                     rowKey="id"
                     className="custom-table custom-table-drag"
                     scroll={{ y: "calc(100vh - 300px)" }}
+                    style={{ height: "calc(100vh - 225px)" }}
                     components={{
                       body: {
                         row: ({ children, ...props }) => {
@@ -795,6 +836,23 @@ const Lesson = () => {
                 rowKey="id"
                 className="custom-table"
                 scroll={{ y: "calc(100vh - 300px)" }}
+                style={{ height: "calc(100vh - 225px)" }}
+                locale={{
+                  emptyText: (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      style={{ height: "calc(100vh - 355px)" }}
+                    >
+                      <div>
+                        <Empty
+                          description={t("nodata", { ns: "common" })}
+                          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                        ></Empty>
+                      </div>
+                    </Flex>
+                  ),
+                }}
               />
             )}
           </>
@@ -818,12 +876,12 @@ const Lesson = () => {
           onCancel={closeModal}
           footer={null}
           className="modal-content"
+          centered
         >
           <div className="form-content-lesson">
             <div className="inputtext">
               <label className="titleinput">
-                {t("lessonName")} (Vietnamese){" "}
-                <span style={{ color: "red" }}>*</span>
+                {t("lessonNameVi")} <span style={{ color: "red" }}>*</span>
               </label>
               <Input
                 placeholder={t("inputlessonNameVi")}
@@ -834,6 +892,12 @@ const Lesson = () => {
                     name: { ...editingLesson?.name, vi: e.target.value },
                   })
                 }
+                styles={{
+                  input: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.nameVi ? "error" : ""}
               />
               {errors.nameVi && (
                 <div className="error-text">{errors.nameVi}</div>
@@ -841,8 +905,7 @@ const Lesson = () => {
             </div>
             <div className="inputtext">
               <label className="titleinput">
-                {t("lessonName")} (English){" "}
-                <span style={{ color: "red" }}>*</span>
+                {t("lessonNameEn")} <span style={{ color: "red" }}>*</span>
               </label>
               <Input
                 placeholder={t("inputlessonNameEn")}
@@ -853,6 +916,12 @@ const Lesson = () => {
                     name: { ...editingLesson?.name, en: e.target.value },
                   })
                 }
+                styles={{
+                  input: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.nameEn ? "error" : ""}
               />
               {errors.nameEn && (
                 <div className="error-text">{errors.nameEn}</div>
@@ -863,12 +932,16 @@ const Lesson = () => {
                 {t("grade")} <span style={{ color: "red" }}>*</span>
               </label>
               <Select
+                suffixIcon={
+                  <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+                }
                 style={{ width: "100%", height: "50px" }}
                 placeholder={t("inputgrade")}
                 value={editingLesson?.grade || undefined}
                 onChange={(value) =>
                   setEditingLesson({ ...editingLesson, grade: value })
                 }
+                status={errors.grade ? "error" : ""}
               >
                 <Select.Option value="1">{t("grade")} 1</Select.Option>
                 <Select.Option value="2">{t("grade")} 2</Select.Option>
@@ -881,12 +954,16 @@ const Lesson = () => {
                 {t("type")} <span style={{ color: "red" }}>*</span>
               </label>
               <Select
+                suffixIcon={
+                  <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+                }
                 style={{ width: "100%", height: "50px" }}
                 placeholder={t("inputType")}
                 value={editingLesson?.type || undefined}
                 onChange={(value) =>
                   setEditingLesson({ ...editingLesson, type: value })
                 }
+                status={errors.type ? "error" : ""}
               >
                 {lessonTypes.map((type) => (
                   <Select.Option key={type.value} value={type.value}>
@@ -901,9 +978,22 @@ const Lesson = () => {
             <Button className="cancel-button" onClick={closeModal} block>
               {t("cancel", { ns: "common" })}
             </Button>
-            <Button className="save-button" onClick={handleSave} block>
-              {t("save", { ns: "common" })}
-            </Button>
+            {loadingSave ? (
+              <Button className="save-button">
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: 20, color: "#fff" }}
+                      spin
+                    />
+                  }
+                />
+              </Button>
+            ) : (
+              <Button className="save-button" onClick={handleSave} block>
+                {t("save", { ns: "common" })}
+              </Button>
+            )}
           </div>
         </Modal>
       </div>

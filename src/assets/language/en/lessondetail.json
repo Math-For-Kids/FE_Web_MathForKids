@@ -1,5 +1,5 @@
 {
-    "managementLessonDetail": "Lesson Detail Management",
+    "managementLessonDetail": "Lesson detail management",
     "addLessonDetail": "Add Lesson",
     "addFullLesson": "Add Content",
     "updateLessonDetail": "Update Lesson Detail",
@@ -16,10 +16,14 @@
     "exampleSection": "Example",
     "rememberSection": "Remember",
     "content": "Content",
+    "contentVi": "Content (Vietnamese)",
+    "contentEn": "Content (English)",
     "inputContentVi": "Enter Content (Vietnamese)",
     "inputContentEn": "Enter Content (English)",
-    "contentViRequired": "Content (Vietnamese) is required",
-    "contentEnRequired": "Content (English) is required",
+    "contentViRequired": "Content (Vietnamese) is required.",
+    "contentEnRequired": "Content (English) is required.",
+    "contentViLength": "Content (Vietnamese) must be at least 10 characters.",
+    "contentEnLength": "Content (English) must be at least 10 characters.",
     "image": "Image",
     "lesson": "Lesson",
     "inputImage": "Upload Image"

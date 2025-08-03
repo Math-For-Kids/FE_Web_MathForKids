@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import {
   Input,
+  InputNumber,
   Button,
   Modal,
   Table,
@@ -11,8 +13,9 @@ import {
   Select,
   Flex,
   Spin,
+  Empty,
 } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, DownOutlined } from "@ant-design/icons";
 import { FaEdit, FaPlus } from "react-icons/fa";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
@@ -24,8 +27,10 @@ import "./reward.css";
 import Navbar from "../../component/Navbar";
 
 const Rewards = () => {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingReward, setEditingReward] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -69,6 +74,7 @@ const Rewards = () => {
         setTimeout(() => setLoading(false), 0);
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
@@ -101,9 +107,11 @@ const Rewards = () => {
         );
         return [...prev, ...uniqueNewExercises];
       });
+      console.log(visibleReward);
       setNextPageToken(response.data.nextPageToken || null);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -138,6 +146,7 @@ const Rewards = () => {
       setNextPageToken(response.data.nextPageToken || null);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -154,6 +163,7 @@ const Rewards = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -163,6 +173,7 @@ const Rewards = () => {
   };
   const handleSave = async () => {
     if (validate()) {
+      setLoadingSave(true);
       try {
         const formData = new FormData();
         formData.append("name", JSON.stringify(editingReward.name));
@@ -171,15 +182,18 @@ const Rewards = () => {
           JSON.stringify(editingReward.description)
         );
         formData.append("exchangePoint", Number(editingReward.exchangePoint));
+        formData.append("exchangeReward", Number(editingReward.exchangeReward));
 
         if (fileList[0]?.originFileObj) {
           formData.append("image", fileList[0].originFileObj);
         }
+        console.log(editingReward);
         if (editingReward.id) {
           await api.patch(`/reward/${editingReward.id}`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
           toast.success(t("updateSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 2000,
           });
@@ -188,6 +202,7 @@ const Rewards = () => {
             headers: { "Content-Type": "multipart/form-data" },
           });
           toast.success(t("addSuccess", { ns: "common" }), {
+            theme: user?.mode === "dark" ? "dark" : "light",
             position: "top-right",
             autoClose: 2000,
           });
@@ -203,15 +218,13 @@ const Rewards = () => {
         closeModal();
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
         });
+      } finally {
+        setLoadingSave(false);
       }
-    } else {
-      toast.error(t("validationFailed", { ns: "common" }), {
-        position: "top-right",
-        autoClose: 2000,
-      });
     }
   };
 
@@ -221,6 +234,7 @@ const Rewards = () => {
         isDisabled: !reward.isDisabled,
       });
       toast.success(t("updateSuccess", { ns: "common" }), {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 2000,
       });
@@ -231,6 +245,7 @@ const Rewards = () => {
       );
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -239,27 +254,41 @@ const Rewards = () => {
 
   const validate = () => {
     const newErrors = {};
+    // name Vi
     if (!editingReward?.name?.vi || editingReward.name.vi.trim() === "") {
       newErrors.nameVi = t("nameViRequired");
-    }
+    } else if (editingReward.name.vi.trim().length < 3)
+      newErrors.nameVi = t("nameViLength");
+
+    // name En
     if (!editingReward?.name?.en || editingReward.name.en.trim() === "") {
       newErrors.nameEn = t("nameEnRequired");
-    }
+    } else if (editingReward.name.en.trim().length < 3)
+      newErrors.nameEn = t("nameEnLength");
+
+    // Des Vi
     if (
       !editingReward?.description?.vi ||
       editingReward.description.vi.trim() === ""
     ) {
       newErrors.descriptionVi = t("descriptionViRequired");
-    }
+    } else if (editingReward.description.vi.trim().length < 10)
+      newErrors.descriptionVi = t("descriptionViLength");
+
+    // Des En
     if (
       !editingReward?.description?.en ||
       editingReward.description.en.trim() === ""
     ) {
       newErrors.descriptionEn = t("descriptionEnRequired");
-    }
-    if (!editingReward.exchangePoint || editingReward.exchangePoint < 1) {
-      newErrors.exchangePointRequired = t("exchangePointRequired");
-    }
+    } else if (editingReward.description.en.trim().length < 10)
+      newErrors.descriptionEn = t("descriptionEnLength");
+
+    // if (!editingReward.exchangePoint || editingReward.exchangePoint < 1) {
+    //   newErrors.exchangePointRequired = t("exchangePointRequired");
+    // }
+
+    // Image
     if (!imageUrl && !editingReward?.image) {
       newErrors.image = t("imageRequired");
     }
@@ -273,6 +302,8 @@ const Rewards = () => {
         name: { en: "", vi: "" },
         description: { en: "", vi: "" },
         image: "",
+        exchangePoint: 1,
+        exchangeReward: 1,
       });
       setImageUrl("");
       setFileList([]);
@@ -303,6 +334,7 @@ const Rewards = () => {
       };
       reader.onerror = () => {
         toast.error(t("errorReadingImage", { ns: "common" }), {
+          theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
@@ -320,7 +352,7 @@ const Rewards = () => {
     setFileList([]);
     setImageUrl("");
     setEditingReward((prev) => ({ ...prev, image: "" }));
-    message.info("Ảnh đã được xóa.");
+    // message.info("Ảnh đã được xóa.");
   };
 
   // Ant Design Table columns
@@ -361,6 +393,7 @@ const Rewards = () => {
       title: t("name"),
       dataIndex: "name",
       key: "name",
+      width: 120,
       render: (_, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
         return record.name?.[i18n.language];
@@ -376,10 +409,33 @@ const Rewards = () => {
       },
     },
     {
+      title: t("exchangePoint"),
+      dataIndex: "exchangePoint",
+      key: "exchangePoint",
+      width: 180,
+      render: (_, record) => {
+        if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
+        return record.exchangePoint;
+      },
+      align: "center",
+    },
+    {
+      title: t("exchangeReward"),
+      dataIndex: "exchangeReward",
+      key: "exchangeReward",
+      width: 170,
+      render: (_, record) => {
+        if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
+        return record.exchangeReward;
+      },
+      align: "center",
+    },
+    {
       title: t("image"),
       dataIndex: "image",
       key: "image",
       align: "center",
+      width: 180,
       render: (image, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
         return (
@@ -397,6 +453,7 @@ const Rewards = () => {
       title: t("action", { ns: "common" }),
       key: "action",
       align: "center",
+      width: 150,
       render: (_, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
         return (
@@ -417,6 +474,7 @@ const Rewards = () => {
       dataIndex: "isDisabled",
       key: "isDisabled",
       align: "center",
+      width: 90,
       render: (isDisabled, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
         return (
@@ -469,6 +527,9 @@ const Rewards = () => {
               </button>
             </span>
             <Select
+              suffixIcon={
+                <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+              }
               className="filter-dropdown"
               value={filterStatus}
               onChange={(value) => {
@@ -487,12 +548,12 @@ const Rewards = () => {
               </Select.Option>
             </Select>
           </div>
-          <Button className="rounded-add" onClick={() => openModal("add")}>
+          <button className="rounded-add" onClick={() => openModal("add")}>
             <Flex justify="center" align="center" gap="small">
               <FaPlus />
               <span>{t("addNew", { ns: "common" })}</span>
             </Flex>
-          </Button>
+          </button>
         </div>
         {/* <div className="table-container-reward"> */}
         {loading ? (
@@ -519,7 +580,24 @@ const Rewards = () => {
             pagination={false}
             rowKey="id"
             className="custom-table"
-            scroll={{ y: "calc(100vh - 300px)" }}
+            scroll={{ y: "calc(100vh - 322px)" }}
+            style={{ height: "calc(100vh - 225px)" }}
+            locale={{
+              emptyText: (
+                <Flex
+                  justify="center"
+                  align="center"
+                  style={{ height: "calc(100vh - 378px)" }}
+                >
+                  <div>
+                    <Empty
+                      description={t("nodata", { ns: "common" })}
+                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                    ></Empty>
+                  </div>
+                </Flex>
+              ),
+            }}
           />
         )}
 
@@ -542,11 +620,12 @@ const Rewards = () => {
           onCancel={closeModal}
           footer={null}
           className="modal-content"
+          centered
         >
-          <div className="form-content-reward">
+          <div className="form-content-lesson">
             <div className="inputtext">
               <label className="titleinput">
-                {t("name")} (Vietnamese) <span style={{ color: "red" }}>*</span>
+                {t("nameVi")} <span style={{ color: "red" }}>*</span>
               </label>
               <Input
                 placeholder={t("inputNameVi")}
@@ -557,6 +636,12 @@ const Rewards = () => {
                     name: { ...editingReward.name, vi: e.target.value },
                   })
                 }
+                styles={{
+                  input: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.nameVi ? "error" : ""}
               />
               {errors.nameVi && (
                 <div className="error-text">{errors.nameVi}</div>
@@ -564,7 +649,7 @@ const Rewards = () => {
             </div>
             <div className="inputtext">
               <label className="titleinput">
-                {t("name")} (English) <span style={{ color: "red" }}>*</span>
+                {t("nameEn")} <span style={{ color: "red" }}>*</span>
               </label>
               <Input
                 placeholder={t("inputNameEn")}
@@ -575,6 +660,12 @@ const Rewards = () => {
                     name: { ...editingReward.name, en: e.target.value },
                   })
                 }
+                styles={{
+                  input: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.nameEn ? "error" : ""}
               />
               {errors.nameEn && (
                 <div className="error-text">{errors.nameEn}</div>
@@ -583,17 +674,23 @@ const Rewards = () => {
             <div className="inputtext">
               <label className="titleinput">
                 {t("exchangePoint")}
-                <span style={{ color: "red" }}>*</span>
+                <span style={{ color: "red" }}> *</span>
               </label>
-              <Input
+              <InputNumber
                 placeholder={t("inputextchangePoint")}
-                value={editingReward?.exchangePoint || ""}
-                onChange={(e) =>
+                value={editingReward?.exchangePoint || 1}
+                onChange={(value) =>
                   setEditingReward({
                     ...editingReward,
-                    exchangePoint: e.target.value,
+                    exchangePoint: parseInt(value),
                   })
                 }
+                // type="number"
+                min={1}
+                style={{
+                  width: "100%",
+                  backgroundColor: "var(--date-picker-bg)",
+                }}
               />
               {errors.exchangePointRequired && (
                 <div className="error-text">{errors.exchangePointRequired}</div>
@@ -601,45 +698,74 @@ const Rewards = () => {
             </div>
             <div className="inputtext">
               <label className="titleinput">
-                {t("image")} <span style={{ color: "red" }}>*</span>
+                {t("exchangeReward")}
+                <span style={{ color: "red" }}> *</span>
               </label>
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                beforeUpload={() => false}
-                onChange={handleImageChange}
-                fileList={fileList}
-              >
-                <Button
-                  icon={<UploadOutlined />}
-                  className="custom-upload-button"
-                >
-                  {t("inputImage")}
-                </Button>
-              </Upload>
-              {imageUrl && (
-                <div className="image-preview-box-option">
-                  <Image
-                    src={imageUrl}
-                    alt="Preview"
-                    className="preview-image-option"
-                  />
-                  <DeleteOutlined
-                    onClick={handleRemoveImage}
-                    style={{
-                      position: "absolute",
-                      top: 8,
-                      right: 8,
-                      fontSize: 20,
-                      color: "#ff4d4f",
-                      cursor: "pointer",
-                      background: "#fff",
-                      borderRadius: "50%",
-                      padding: 4,
-                    }}
-                  />
+              <InputNumber
+                placeholder={t("inputextchangePoint")}
+                value={editingReward?.exchangeReward || 1}
+                onChange={(value) =>
+                  setEditingReward({
+                    ...editingReward,
+                    exchangeReward: parseInt(value),
+                  })
+                }
+                // type="number"
+                min={1}
+                style={{
+                  width: "100%",
+                  backgroundColor: "var(--date-picker-bg)",
+                }}
+              />
+              {errors.exchangeRewardRequired && (
+                <div className="error-text">
+                  {errors.exchangeRewardRequired}
                 </div>
               )}
+            </div>
+            <div className="inputtext">
+              <label className="titleinput">
+                {t("image")} <span style={{ color: "red" }}>*</span>
+              </label>
+              <Flex>
+                <Upload
+                  accept="image/*"
+                  showUploadList={false}
+                  beforeUpload={() => false}
+                  onChange={handleImageChange}
+                  fileList={fileList}
+                >
+                  <button className="buttondetail">
+                    <Flex justify="center" align="center">
+                      <UploadOutlined className="iconupdate" />
+                      <span>{t("inputImage")}</span>
+                    </Flex>
+                  </button>
+                </Upload>
+                {imageUrl && (
+                  <div className="image-preview-box-option">
+                    <Image
+                      src={imageUrl}
+                      alt="Preview"
+                      className="preview-image-option"
+                    />
+                    <DeleteOutlined
+                      onClick={handleRemoveImage}
+                      style={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        fontSize: 20,
+                        color: "var(--error-text)",
+                        cursor: "pointer",
+                        background: "var(--color-bg-container)",
+                        borderRadius: "50%",
+                        padding: 4,
+                      }}
+                    />
+                  </div>
+                )}
+              </Flex>
               {errors.image && <div className="error-text">{errors.image}</div>}
             </div>
             <div className="inputtext">
@@ -660,6 +786,12 @@ const Rewards = () => {
                   })
                 }
                 rows={4}
+                styles={{
+                  textarea: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.descriptionVi ? "error" : ""}
               />
               {errors.descriptionVi && (
                 <div className="error-text">{errors.descriptionVi}</div>
@@ -683,6 +815,12 @@ const Rewards = () => {
                   })
                 }
                 rows={4}
+                styles={{
+                  textarea: {
+                    backgroundColor: "var(--date-picker-bg)",
+                  },
+                }}
+                status={errors.descriptionEn ? "error" : ""}
               />
               {errors.descriptionEn && (
                 <div className="error-text">{errors.descriptionEn}</div>
@@ -693,9 +831,22 @@ const Rewards = () => {
             <Button className="cancel-button" onClick={closeModal} block>
               {t("cancel", { ns: "common" })}
             </Button>
-            <Button className="save-button" onClick={handleSave} block>
-              {t("save", { ns: "common" })}
-            </Button>
+            {loadingSave ? (
+              <Button className="save-button">
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: 20, color: "#fff" }}
+                      spin
+                    />
+                  }
+                />
+              </Button>
+            ) : (
+              <Button className="save-button" onClick={handleSave} block>
+                {t("save", { ns: "common" })}
+              </Button>
+            )}
           </div>
         </Modal>
       </div>

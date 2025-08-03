@@ -22,7 +22,7 @@ export default function UserPupilLineChart() {
     dayjs(),
   ]);
   const [selectedYear, setSelectedYear] = useState([
-    dayjs().startOf("year"),
+    dayjs().subtract(1, "year").startOf("year"),
     dayjs().endOf("year"),
   ]);
   const [selectedYearRange, setSelectedYearRange] = useState([

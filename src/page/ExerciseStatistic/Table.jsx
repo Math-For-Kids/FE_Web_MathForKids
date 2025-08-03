@@ -1,31 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { Table, Image, Flex } from "antd";
+import React, { useState, useEffect, useContext } from "react";
+import { Table, Image, Flex, Empty } from "antd";
 import { FaEdit } from "react-icons/fa";
 import { Column } from "@ant-design/plots";
+import { UserContext } from "../../contexts/UserContext";
 import MoreButton from "./MoreButton";
 import { useTranslation } from "react-i18next";
-import { getEnabledLevels } from "../../assets/api/Level";
+import UpdateExercise from "./UpdateExercise";
 
 export default function TableStatistic({
   selectedLesson,
+  levels,
   exercises,
   setExercises,
   countExercises,
   nextPageToken,
   setNextPageToken,
 }) {
-  const [levels, setLevels] = useState([]);
+  const { user } = useContext(UserContext);
   const { t, i18n } = useTranslation(["exercise", "common", "dashboard"]);
-
-  const loadLevels = async () => {
-    const levelList = await getEnabledLevels();
-    setLevels(levelList);
-  };
-
-  useEffect(() => {
-    console.log(exercises);
-    loadLevels();
-  }, []);
 
   const columns = [
     {
@@ -60,7 +52,7 @@ export default function TableStatistic({
     {
       title: t("question_level"),
       key: "question",
-      width: 250,
+      width: 300,
       render: (_, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
 
@@ -82,7 +74,7 @@ export default function TableStatistic({
       dataIndex: "image",
       key: "image",
       align: "center",
-      width: 220,
+      width: 300,
       render: (image, record) => {
         if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
         return image ? (
@@ -92,7 +84,11 @@ export default function TableStatistic({
             width={200}
             height={100}
           />
-        ) : null;
+        ) : (
+          <span style={{ width: 60, opacity: 0.5 }}>
+            {t("none", { ns: "common" })}
+          </span>
+        );
       },
     },
     {
@@ -126,8 +122,11 @@ export default function TableStatistic({
           },
           style: {
             fill: ({ isAnswer }) => {
-              if (isAnswer) return "#389e0d";
-              return "#cf1322";
+              if (isAnswer)
+                return user?.mode === "dark"
+                  ? "rgba(154, 249, 58, 0.89)"
+                  : "#4bb615ff";
+              return user?.mode === "dark" ? "#db272aff" : "#ea3538ff";
             },
             maxWidth: 50,
           },
@@ -140,7 +139,9 @@ export default function TableStatistic({
                 );
                 return (
                   <div key={title}>
-                    <span>{title}</span>
+                    <span style={{ color: "var(--color-text-chart)" }}>
+                      {title}
+                    </span>
                     {items.map((item) => {
                       const { name, value, color } = item;
                       const percent =
@@ -167,14 +168,18 @@ export default function TableStatistic({
                                   marginRight: 6,
                                 }}
                               ></span>
-                              <span>
+                              <span
+                                style={{ color: "var(--color-text-chart)" }}
+                              >
                                 {record.chartData.find((d) => d.type === title)
                                   ?.isAnswer
                                   ? t("true")
                                   : t("false")}
                               </span>
                             </div>
-                            <b>{value}</b>
+                            <b style={{ color: "var(--color-text-chart)" }}>
+                              {value}
+                            </b>
                           </div>
                           <div
                             style={{
@@ -183,8 +188,17 @@ export default function TableStatistic({
                               justifyContent: "space-between",
                             }}
                           >
-                            <span style={{ marginLeft: 12 }}>{t("ratio")}</span>
-                            <b>{percent}%</b>
+                            <span
+                              style={{
+                                marginLeft: 12,
+                                color: "var(--color-text-chart)",
+                              }}
+                            >
+                              {t("ratio")}
+                            </span>
+                            <b style={{ color: "var(--color-text-chart)" }}>
+                              {percent}%
+                            </b>
                           </div>
                         </div>
                       );
@@ -194,33 +208,28 @@ export default function TableStatistic({
               },
             },
           },
+          theme: user?.mode === "dark" ? "dark" : "light",
         };
 
         return <Column {...config} />;
       },
     },
-    {
-      title: t("action", { ns: "common" }),
-      key: "action",
-      align: "center",
-      width: 150,
-      render: (_, record) => {
-        if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
-        return (
-          <div>
-            <button
-              className="text-white px-3 py-1 buttonupdate"
-              // onClick={() => openModal("update", record)}
-            >
-              <Flex justify="center" align="center">
-                <FaEdit className="iconupdate" />
-                <span>{t("update", { ns: "common" })}</span>
-              </Flex>
-            </button>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: t("action", { ns: "common" }),
+    //   key: "action",
+    //   align: "center",
+    //   width: 150,
+    //   render: (_, record) => {
+    //     if (record.isMoreButtonRow) return { props: { colSpan: 0 } };
+    //     return (
+    //       <UpdateExercise
+    //         exercise={record}
+    //         setExercises={setExercises}
+    //         levels={levels}
+    //       />
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -235,6 +244,24 @@ export default function TableStatistic({
       rowKey="id"
       className="custom-table"
       scroll={{ y: "calc(100vh - 300px)" }}
+      style={{ height: "calc(100vh - 225px)" }}
+      tableLayout="fixed"
+      locale={{
+        emptyText: (
+          <Flex
+            justify="center"
+            align="center"
+            style={{ height: "calc(100vh - 355px)" }}
+          >
+            <div>
+              <Empty
+                description={t("nodata", { ns: "common" })}
+                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+              ></Empty>
+            </div>
+          </Flex>
+        ),
+      }}
     />
   );
 }

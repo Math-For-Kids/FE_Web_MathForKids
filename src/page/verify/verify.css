@@ -73,16 +73,16 @@
     border: none !important;
     cursor: pointer !important;
     margin: 10px !important;
+    text-align: center;
 }
 
 .buttonverify:hover {
     background-color: #2563eb !important;
-
 }
 
-.buttonverify:focus,
+/* .buttonverify:focus,
 .buttonverify:active {
     background-color: #2563eb !important;
     border: none !important;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-}
+} */

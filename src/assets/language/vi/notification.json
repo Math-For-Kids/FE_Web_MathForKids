@@ -1,8 +1,12 @@
 {
-    "managementNotifications": "Quản lý thông báo",
+    "managementNotifications": "Quản lý thông báo chung",
     "title": "Tiêu đề",
+    "titleVi": "Tiêu đề (Tiếng Việt)",
+    "titleEn": "Tiêu đề (Tiếng Anh)",
     "sender": "Người nhận",
     "content": "Nội dung",
+    "contentVi": "Nội dung (Tiếng Việt)",
+    "contentEn": "Nội dung (Tiếng Anh)",
     "createdAt": "Ngày tạo",
     "status": "Trạng thái",
     "read": "Đã đọc",
@@ -14,9 +18,13 @@
     "selectSender": "Chọn người nhận",
     "inputContentVi": "Nhập nội dung (Tiếng Việt)",
     "inputContentEn": "Nhập nội dung (Tiếng Anh)",
-    "titleViRequired": "Tiêu đề (Tiếng Việt) là bắt buộc",
-    "titleEnRequired": "Tiêu đề (Tiếng Anh) là bắt buộc",
-    "contentViRequired": "Nội dung (Tiếng Việt) là bắt buộc",
-    "contentEnRequired": "Nội dung (Tiếng Anh) là bắt buộc",
-    "senderRequired": "Người nhận là bắt buộc"
+    "titleViRequired": "Tiêu đề (Tiếng Việt) là bắt buộc.",
+    "titleEnRequired": "Tiêu đề (Tiếng Anh) là bắt buộc.",
+    "contentViRequired": "Nội dung (Tiếng Việt) là bắt buộc.",
+    "contentEnRequired": "Nội dung (Tiếng Anh) là bắt buộc.",
+    "senderRequired": "Người nhận là bắt buộc",
+    "titleViLenghth": "Tiêu đề (Tiếng Việt) phải có ít nhất 3 ký tự.",
+    "titleEnLenghth": "Tiêu đề (Tiếng Anh) phải có ít nhất 3 ký tự.",
+    "contentViLenghth": "Nội dung (Tiếng Việt) phải có ít nhất 10 ký tự.",
+    "contentEnLenghth": "Nội dung (Tiếng Anh) phải có ít nhất 10 ký tự."
 }

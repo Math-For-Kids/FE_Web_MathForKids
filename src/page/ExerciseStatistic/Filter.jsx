@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { Flex, Space, Select } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { getByGradeAndType } from "../../assets/api/Lesson";
 import {
   countExerciseByLessonAndDisabledStatus,
@@ -16,6 +19,7 @@ export default function Filter({
   setCountExercises,
   setNextPageToken,
 }) {
+  const { user } = useContext(UserContext);
   const { t, i18n } = useTranslation(["exercise", "lesson", "common"]);
   const [grade, setGrade] = useState(1);
   const [type, setType] = useState("addition");
@@ -40,7 +44,7 @@ export default function Filter({
         selectedLesson
       );
       setCountExercises(countExercises.count);
-      const result = await filterExerciseByIsDisabled(selectedLesson, 3, null);
+      const result = await filterExerciseByIsDisabled(selectedLesson, 4, null);
       const exerciseArray = Array.isArray(result.data)
         ? result.data
         : Object.values(result.data);
@@ -54,7 +58,6 @@ export default function Filter({
             answer,
             options
           );
-          console.log(counts);
 
           // Gộp lại thành data để vẽ biểu đồ
           const chartData = [
@@ -72,13 +75,13 @@ export default function Filter({
           };
         })
       );
-      console.log(updatedExercises);
       setExercises(updatedExercises);
       setNextPageToken(result.nextPageToken);
 
       setTimeout(() => setLoading(false), 0);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
@@ -117,6 +120,9 @@ export default function Filter({
       {/* Select lớp */}
       <Space>
         <Select
+          suffixIcon={
+            <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+          }
           value={grade}
           onChange={(value) => {
             setGrade(value);
@@ -141,6 +147,9 @@ export default function Filter({
         </Select>
         {/* Select loại bài */}
         <Select
+          suffixIcon={
+            <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+          }
           value={type}
           onChange={(value) => setType(value)}
           style={{ width: 150 }}
@@ -164,6 +173,9 @@ export default function Filter({
         </Select>
         {/* Select bài học */}
         <Select
+          suffixIcon={
+            <DownOutlined style={{ color: "var(--dropdown-icon)" }} />
+          }
           value={selectedLesson}
           onChange={(value) => setSelectedLesson(value)}
           style={{ width: 350 }}

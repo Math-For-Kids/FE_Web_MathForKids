@@ -18,6 +18,11 @@ export default function FilterQuarter({ quarterRange, setQuarterRange }) {
       }}
       disabledDate={(current) => current && current > dayjs().endOf("day")}
       allowClear={false}
+      styles={{
+        root: {
+          backgroundColor: "var(--date-picker-bg)",
+        },
+      }}
     />
   );
 }

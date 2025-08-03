@@ -37,3 +37,13 @@ export const getPointStatsByGrade = async (grade, startDate, endDate) => {
     return [];
   }
 };
+
+export const rankingByGrade = async (grade) => {
+  try {
+    const response = await api.get(`/test/rankingByGrade/${grade}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ranking statistic:", error);
+    return [];
+  }
+};

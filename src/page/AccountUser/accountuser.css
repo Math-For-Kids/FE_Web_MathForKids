@@ -22,11 +22,11 @@
 
 /* Phần content có nền trắng (trừ h1 ra) */
 .containers-content {
-    background-color: var(--background-white);
+    background-color: var(--color-bg-container);
     margin: 20px;
     border-radius: 10px;
     padding: 20px 10px 10px;
-    box-shadow: 5px 0 10px rgb(218, 218, 244);
+    box-shadow: 5px 0 10px var(--box-shadow);
 }
 
 /* Thanh filter và các thành phần bên trong */
@@ -49,19 +49,19 @@
 }
 
 .iconfilter {
-    color: var(--color-filter);
+    color: var(--color-text);
 }
 
 .filter-text {
     background: none;
     border: none;
     font-size: 16px;
-    color: var(--color-filter);
+    color: var(--color-text);
     cursor: pointer;
     font-weight: 500;
 }
 
-.filter-dropdown .ant-select-selector {
+/* .filter-dropdown .ant-select-selector {
     padding: 8px 12px;
     border: 1px solid var(--border-search);
     border-radius: 8px;
@@ -69,47 +69,121 @@
     background-color: var(--background-white);
     min-width: 120px;
     color: var(--color-black);
-}
+} */
 
 .rounded-add {
-    padding: 8px 16px;
+    padding: 4px 16px;
     background-color: var(--background-buttonadd);
-    color: var(--color-buttonadd);
+    color: var(--color-textwhite);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
-    border: 1px solid var(--color-border);
+}
+
+.rounded-add:hover {
+    background-color: var(--background-buttonadd-hover);
 }
 
 /* Bảng chính */
-table {
+/* table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: collapse;    
+} */
+
+/* thead tr {
+    background-color: var(--table-name);
+} */
+
+/* .custom-table tbody tr:nth-child(odd) {
+    background-color: var(--background-white);
+} */
+
+.custom-table tbody tr:nth-child(odd) {
+    background-color: var(--row-even);
+}
+
+.custom-table .ant-table .ant-table-container .ant-table-body,
+.custom-table .ant-table .ant-table-container .ant-table-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-table) transparent;
+    scrollbar-gutter: stable;
+}
+
+.custom-table .ant-table-container {
     margin-top: 20px;
 }
 
-thead tr {
-    background-color: var(--table-name);
+.ant-table-cell-scrollbar {
+    /* Xóa viền nếu có */
+    box-shadow: none !important;
 }
 
-.custom-table tbody tr:nth-child(odd) {
-    background-color: var(--background-white);
+/* Áp dụng cho textarea (ví dụ như Antd Input.TextArea) */
+textarea::-webkit-scrollbar {
+    width: 9px;
 }
 
-.custom-table tbody tr:nth-child(even) {
-    background-color: #f1f1fb;
+textarea::-webkit-scrollbar-thumb {
+    background-color: var(--scroll);
+    /* Màu cuộn */
+    border-radius: 4px;
 }
 
-.table-container-user tbody tr:hover>td {
+textarea::-webkit-scrollbar-track {
+    background-color: transparent;
+    /* Màu nền thanh cuộn */
+}
+
+textarea::-webkit-resizer {
+    background-color: var(--date-picker-bg);
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg' fill='grey'><line x1='4' y1='16' x2='16' y2='4' stroke='grey' stroke-width='1'/><line x1='8' y1='16' x2='16' y2='8' stroke='grey' stroke-width='1'/><line x1='12' y1='16' x2='16' y2='12' stroke='grey' stroke-width='1'/></svg>");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    cursor: se-resize;
+}
+
+/* textarea.custom-textarea {
+  resize: inherit;
+  min-height: 100px;
+  background-color: #1e1e2f !important;
+  color: white !important;
+  border: 1px solid #333 !important;
+  padding: 8px;
+} */
+
+/* .custom-table .ant-table .ant-table-container .ant-table-body::-webkit-scrollbar,
+.custom-table .ant-table .ant-table-container .ant-table-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+} */
+
+/* .custom-table .ant-table .ant-table-container .ant-table-body::-webkit-scrollbar-thumb,
+.custom-table .ant-table .ant-table-container .ant-table-content::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-table);
+  border-radius: 10px;
+}
+
+.custom-table .ant-table .ant-table-container .ant-table-body::-webkit-scrollbar-track,
+.custom-table .ant-table .ant-table-container .ant-table-content::-webkit-scrollbar-track {
+  background: transparent;
+} */
+
+/* .table-container-user tbody tr:hover>td {
     background-color: var(--background-hover) !important;
-}
+} */
 
-th,
+/* th,
 td {
     color: var(--table-color);
     padding: 12px;
     text-align: left;
+} */
+
+.modal-content .ant-modal-header {
+    border-bottom: 1px solid var(--divider);
+    padding-bottom: 10px;
 }
 
 /* Search */
@@ -164,31 +238,43 @@ td {
 .buttonupdate {
     padding: 8px 16px;
     border: none;
-    background-color: var(--button-update);
+    background-color: var(--background-button);
     color: var(--color-textwhite);
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
+}
+
+.buttonupdate:hover {
+    background-color: var(--background-buttonhover);
 }
 
 .buttondetail {
     padding: 8px 16px;
     border: none;
-    background-color: var(--color-export);
+    background-color: var(--button-detail);
     color: var(--color-textwhite);
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
 }
 
+.buttondetail:hover {
+    background-color: var(--button-detail-hover);
+}
+
 .buttonlessondetail {
     padding: 8px 16px;
     border: none;
-    background-color: var(--background-save);
+    background-color: var(--background-button);
     color: var(--color-textwhite);
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
+}
+
+.buttonlessondetail:hover {
+    background-color: var(--background-buttonhover);
 }
 
 .iconupdate {
@@ -273,21 +359,17 @@ input:checked+.slider::before {
 }
 
 /* Modal bảng con */
-.modal-content tbody tr:nth-child(even) {
+/* .modal-content tbody tr:nth-child(even) {
     background-color: var(--background-content);
 }
 
 .modal-content tbody tr:nth-child(odd) {
     background-color: var(--background-white);
-}
+} */
 
-.ant-modal-content {
-    width: 550px;
-    max-width: 90vw;
-    margin: auto;
-    border-radius: 10px;
-
-}
+/* .ant-modal-content {
+    background-color: var(--color-bg-container) !important;
+} */
 
 .modal-content input,
 .modal-content select {
@@ -300,10 +382,10 @@ input:checked+.slider::before {
     transition: border-color 0.3s ease;
 }
 
-.modal-content input:focus,
+/* .modal-content input:focus,
 .modal-content select:focus {
     border-color: var(--border-input);
-}
+} */
 
 .inputtext label {
     display: block;
@@ -311,7 +393,7 @@ input:checked+.slider::before {
     font-weight: bold;
 }
 
-.modal-content button {
+/* .modal-content button {
     flex: 1;
     padding: 10px;
     border: none;
@@ -322,7 +404,7 @@ input:checked+.slider::before {
     cursor: pointer;
     font-size: 15px;
     transition: background-color 0.2s;
-}
+} */
 
 /* Form trong Modal */
 .form-content {
@@ -369,8 +451,8 @@ input:checked+.slider::before {
 }
 
 .save-button {
-    background-color: var(--background-save);
-    color: var(--color-textwhite);
+    background-color: var(--background-save) !important;
+    color: var(--color-textwhite) !important;
     border: none;
     border-radius: 8px;
     height: 40px;
@@ -381,13 +463,13 @@ input:checked+.slider::before {
 }
 
 .save-button:hover {
-    background-color: var(--background-savehover);
-    color: var(--color-textwhite);
+    background-color: var(--background-savehover) !important;
+    color: var(--color-textwhite) !important;
 }
 
 .cancel-button {
-    background-color: var(--background-cancel);
-    color: var(--color-textwhite);
+    background-color: var(--background-cancel) !important;
+    color: var(--color-textwhite) !important;
     border: none;
     border-radius: 8px;
     height: 40px;
@@ -397,12 +479,12 @@ input:checked+.slider::before {
 }
 
 .cancel-button:hover {
-    background-color: var(--background-cancelhover);
-    color: var(--color-textwhite);
+    background-color: var(--background-cancelhover) !important;
+    color: var(--color-textwhite) !important;
 }
 
 /* Bảng dữ liệu */
-.table-container-user table {
+/* .table-container-user table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -413,10 +495,10 @@ input:checked+.slider::before {
     text-align: left;
     overflow-wrap: break-word;
     max-width: 200px;
-}
+} */
 
 /* Specific column widths */
-.table-container-user th:nth-child(1),
+/* .table-container-user th:nth-child(1),
 .table-container-user td:nth-child(1) {
     width: 80px;
 }
@@ -454,7 +536,7 @@ input:checked+.slider::before {
 .table-container-user th:nth-child(8),
 .table-container-user td:nth-child(8) {
     max-width: 100px;
-}
+} */
 
 /* User detail */
 .pupil-detail-content {
@@ -463,6 +545,7 @@ input:checked+.slider::before {
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: var(--color-textsearch) transparent;
+    padding: 10px 0;
 }
 
 .user-detail-section {
@@ -480,7 +563,7 @@ input:checked+.slider::before {
 .user-detail-label {
     width: 150px;
     font-weight: 600;
-    color: var(--color-title);
+    color: var(--color-text);
 }
 
 .user-detail-value {
@@ -505,8 +588,9 @@ input:checked+.slider::before {
     border-radius: 12px;
     padding: 6px;
     width: 200px;
-    height: 100px;
-    display: flex;
+    /* height: 100px; */
+    /* display: flex; */
+    /* margin-top: 10px; */
     margin-left: auto;
     justify-content: center;
     background-color: var(--background-white);
@@ -517,9 +601,15 @@ input:checked+.slider::before {
     max-height: 100%;
     border-radius: 8px;
     object-fit: contain;
-    
+
 }
 
 /* .anticon svg {
     color: var(--background-white);
 } */
+
+/* Tăng margin top cho ToastContainer ở vị trí top-right */
+.Toastify__toast-container--top-right {
+    top: 80px !important;
+    /* Thay đổi số pixel tuỳ ý */
+}

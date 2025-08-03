@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Column } from "@ant-design/plots";
 import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { UserContext } from "../../contexts/UserContext";
 import { useTranslation } from "react-i18next";
 import { countUsersByQuarter } from "../../assets/api/User";
 import { countPupilsByQuarter } from "../../assets/api/Pupil";
 
 export default function UserPupil_Quarter({ selectedYearRange }) {
+  const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { i18n } = useTranslation();
@@ -123,13 +125,22 @@ export default function UserPupil_Quarter({ selectedYearRange }) {
                   textAlign: "center",
                   fontWeight: "bold",
                   marginBottom: 6,
+                  color: "var(--color-text-chart)",
                 }}
               >
                 {title}
               </div>
               {Object.entries(yearMap).map(([year, yearItems]) => (
                 <div key={year} style={{ marginBottom: 8 }}>
-                  <div style={{ fontWeight: 600, marginBottom: 4 }}>{year}</div>
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      marginBottom: 4,
+                      color: "var(--color-text-chart)",
+                    }}
+                  >
+                    {year}
+                  </div>
                   {yearItems.map((item, index) => {
                     const { color, origin } = item;
                     return (
@@ -154,9 +165,13 @@ export default function UserPupil_Quarter({ selectedYearRange }) {
                               marginRight: 6,
                             }}
                           ></span>
-                          <span>{origin?.type}</span>
+                          <span style={{ color: "var(--color-text-chart)" }}>
+                            {origin?.type}
+                          </span>
                         </div>
-                        <b>{origin?.total}</b>
+                        <b style={{ color: "var(--color-text-chart)" }}>
+                          {origin?.total}
+                        </b>
                       </div>
                     );
                   })}
@@ -167,11 +182,12 @@ export default function UserPupil_Quarter({ selectedYearRange }) {
         },
       },
     },
-    height: 350,
+    theme: user?.mode === "dark" ? "dark" : "light",
+    height: 420,
   };
 
   return loading ? (
-    <Flex justify="center" align="center" style={{ height: "371.5px" }}>
+    <Flex justify="center" align="center" style={{ height: "441.5px" }}>
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     </Flex>
   ) : (

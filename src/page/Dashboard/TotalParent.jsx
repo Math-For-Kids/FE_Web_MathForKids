@@ -35,7 +35,7 @@ export default function TotalParent() {
           style={{
             height: 100,
             width: 20,
-            backgroundColor: "#FDD14D",
+            backgroundColor: "var(--total-parent-tag)",
             borderTopLeftRadius: 6,
             borderBottomLeftRadius: 6,
           }}
@@ -68,10 +68,10 @@ export default function TotalParent() {
                 }
               />
             </div>
-            <div className="card-icon" style={{ backgroundColor: "#dbeafe" }}>
+            <div className="card-icon" style={{ backgroundColor: "var(--total-parent-icon-bg)" }}>
               <svg
                 className="w-6 h-6"
-                fill="#93c5fd"
+                fill="var(--total-parent-icon)"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >

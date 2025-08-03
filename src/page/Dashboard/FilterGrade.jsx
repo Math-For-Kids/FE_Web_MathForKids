@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
-export default function FilterMathType({ grade, setGrade }) {
+export default function FilterGrade({ grade, setGrade }) {
   const { t, i18n } = useTranslation("lesson");
 
   return (
     <Select
+      suffixIcon={<DownOutlined style={{ color: "var(--dropdown-icon)" }} />}
       value={grade}
       onChange={(value) => setGrade(value)}
       style={{ width: 120 }}

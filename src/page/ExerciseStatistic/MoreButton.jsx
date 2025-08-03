@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { Button, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { filterExerciseByIsDisabled } from "../../assets/api/Exercise";
 import { countOptionByExercise } from "../../assets/api/TestQuestion";
@@ -13,6 +15,7 @@ export default function MoreButton({
   nextPageToken,
   setNextPageToken,
 }) {
+  const { user } = useContext(UserContext);
   const { t, i18n } = useTranslation(["exercise", "common"]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +24,7 @@ export default function MoreButton({
     try {
       const result = await filterExerciseByIsDisabled(
         selectedLesson,
-        3,
+        4,
         nextPageToken
       );
       const exerciseArray = Array.isArray(result.data)
@@ -58,6 +61,7 @@ export default function MoreButton({
       setNextPageToken(result.nextPageToken);
     } catch (error) {
       toast.error(error.response?.data?.message?.[i18n.language], {
+        theme: user?.mode === "dark" ? "dark" : "light",
         position: "top-right",
         autoClose: 3000,
       });
