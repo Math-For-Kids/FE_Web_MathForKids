@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import api from "../../assets/api/Api";
 import "./profile.css";
+import { NewLineKind } from "typescript";
 
 const Profile = () => {
   const { user, reloadUser } = useContext(UserContext);
@@ -285,8 +286,8 @@ const Profile = () => {
         setLoadingChange(true);
         try {
           const res = await api.post(
-            `/auth/sendOtpByEmail/${userData.email}`,
-            {},
+            `/auth/sendOtpToUpdateEmail/${userID}/${email}`,
+            { newEmail: newEmail },
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -330,8 +331,10 @@ const Profile = () => {
         setLoadingChange(true);
         try {
           const res = await api.post(
-            `/auth/sendOtpByPhone/${userData.phoneNumber}`,
-            {},
+            `/auth/sendOtpToUpdatePhone/${userID}/${phoneNumber}`,
+            {
+              newPhoneNumber: newPhoneNumber,
+            },
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -411,8 +414,8 @@ const Profile = () => {
         if (res.data.message) {
           if (otpPurpose === "email") {
             const updateRes = await api.patch(
-              `/user/updateEmail/${userID}`,
-              { newEmail },
+              `/user/updateProfile/${userID}`,
+              { email: newEmail },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -436,8 +439,8 @@ const Profile = () => {
             }
           } else if (otpPurpose === "phoneNumber") {
             const updateRes = await api.patch(
-              `/user/updatePhone/${userID}`,
-              { newPhoneNumber },
+              `/user/updateProfile/${userID}`,
+              { phoneNumber: newPhoneNumber },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -885,6 +888,11 @@ const Profile = () => {
                   placeholder={t("enterOTP")}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
+                  styles={{
+                    input: {
+                      backgroundColor: "var(--date-picker-bg)",
+                    },
+                  }}
                   status={errors.otp ? "error" : ""}
                 />
                 {errors.otp && <div className="error-text">{errors.otp}</div>}
