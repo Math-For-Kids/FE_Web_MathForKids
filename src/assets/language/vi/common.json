@@ -22,5 +22,6 @@
     "exercise_statistic": "Đáp Án Bài Tập",
     "More": "Tải thêm",
     "nodata": "Không có dữ liệu",
-    "none": "Không có"
+    "none": "Không có",
+    "logout_confirm": "Bạn có chắc chắn muốn đăng xuất không?"
 }

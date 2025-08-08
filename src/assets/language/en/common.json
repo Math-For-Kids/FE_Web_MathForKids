@@ -22,5 +22,6 @@
     "exercise_statistic": "Exercise Answers",
     "More": "More",
     "nodata": "No data",
-    "none": "None"
+    "none": "None",
+    "logout_confirm": "Are you sure you want to log out?"
 }

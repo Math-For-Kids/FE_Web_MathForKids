@@ -2,15 +2,15 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../assets/api/Api";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Logout = () => {
+  const { t, i18n } = useTranslation(["common"]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const confirmLogout = async () => {
-      const confirmed = window.confirm(
-        "Bạn có chắc chắn muốn đăng xuất không?"
-      );
+      const confirmed = window.confirm(t("logout_confirm"));
       if (confirmed) {
         try {
           await api.post("/auth/logout");
