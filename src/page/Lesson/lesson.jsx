@@ -48,7 +48,7 @@ const Lesson = () => {
   const [visibleLesson, setVisibleLesson] = useState([]);
   const [nextPageToken, setNextPageToken] = useState(null);
   const [isDragEnabled, setIsDragEnabled] = useState(false); // New state for drag toggle
-  const { t, i18n } = useTranslation(["lesson", "common"]);
+  const { t, i18n } = useTranslation(["lesson", "common", "level"]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const lessonsPerPage = 10;
@@ -442,13 +442,13 @@ const Lesson = () => {
           api.patch(`/lesson/order/${lesson.id}`, { order: lesson.order })
         );
         await Promise.all(updatePromises);
-        toast.success(t("updateOrderSuccess", { ns: "common" }), {
+        toast.success(t("updateOrderSuccess", { ns: "level" }), {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
       } catch (error) {
-        toast.error(t("updateOrderFailed", { ns: "common" }), {
+        toast.error(error.response?.data?.message?.[i18n.language], {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
