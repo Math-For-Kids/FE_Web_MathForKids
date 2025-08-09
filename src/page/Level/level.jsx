@@ -352,7 +352,7 @@ const Level = () => {
 
       try {
         const updatePromises = updatedLevels.map((level) =>
-          api.patch(`/level/${level.id}`, { level: level.level })
+          api.patch(`/level/updateOrder/${level.id}`, { level: level.level })
         );
         await Promise.all(updatePromises);
         toast.success(t("updateOrderSuccess"), {
@@ -361,7 +361,7 @@ const Level = () => {
           autoClose: 2000,
         });
       } catch (error) {
-        toast.error(t("updateOrderFailed"), {
+        toast.error(error.response?.data?.message?.[i18n.language], {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
