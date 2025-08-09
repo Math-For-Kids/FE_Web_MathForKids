@@ -239,11 +239,15 @@
   position: relative;
 }
 
+/* :where(.css-dev-only-do-not-override-1jkir8e).ant-tabs-large >.ant-tabs-nav .ant-tabs-tab {
+    padding: 16px 10px;
+} */
+
 /* Ghi đè màu của tab đang active */
-.ant-tabs-tab-active .ant-tabs-tab-btn {
+/* .ant-tabs-tab-active .ant-tabs-tab-btn { */
   /* color: #119368 !important; */
-  font-weight: 600;
-}
+  /* font-weight: 600; */
+/* } */
 
 /* Nếu cần border bottom của tab active cũng đổi màu */
 /* .ant-tabs-ink-bar {
