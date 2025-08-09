@@ -244,15 +244,26 @@ const AccountUser = () => {
     if (validateForm()) {
       setLoadingSave(true);
       try {
-        const response = await api.post(`/user`, edittingUser);
-        const newuser = response.data.id;
-        await api.put(`/user/${newuser}`, { isVerify: true });
+        const response = await api.post(`/user`, {
+          ...edittingUser,
+          isVerify: true,
+        });
+        // const newuser = response.data.id;
+        // await api.put(`/user/updateProfile/${newuser}`, { isVerify: true });
         toast.success(t("addSuccess", { ns: "common" }), {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 2000,
         });
         closeModal();
+        setUserData([]);
+        setVisibleUser([]);
+        setNextPageToken(null);
+        if (filterStatus !== "all") {
+          await fetchUsersByDisabled(null, filterStatus, selectedRole);
+        } else {
+          await fetchUsersByRole(null, selectedRole);
+        }
       } catch (error) {
         toast.error(error.response?.data?.message?.[i18n.language], {
           theme: user?.mode === "dark" ? "dark" : "light",
