@@ -644,7 +644,7 @@ const Level = () => {
                                     ...provided.draggableProps.style,
                                     ...(snapshot.isDragging
                                       ? {
-                                          backgroundColor: "#f0f0f0",
+                                          backgroundColor: "var(--row-hover-bg)",
                                           boxShadow:
                                             "0 4px 8px rgba(0,0,0,0.2)",
                                         }

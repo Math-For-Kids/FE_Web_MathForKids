@@ -36,8 +36,9 @@
 } */
 
 .dragging-over {
-    background-color: #e6f7ff;
+    /* background-color: #e6f7ff; */
     transition: background-color 0.2s;
+    height: calc(100vh - 225px);
 }
 
 .table-container-lesson {
