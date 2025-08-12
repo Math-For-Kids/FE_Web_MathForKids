@@ -126,11 +126,11 @@ const Profile = () => {
       );
       if (response.status === 200) {
         setUserData({ ...userData, image: response.data.image });
-        toast.success(t("imageUploadSuccess", { ns: "common" }), {
+        toast.success(t("imageUploadSuccess"), {
           theme: user?.mode === "dark" ? "dark" : "light",
         });
       } else {
-        toast.error(t("imageUploadFailed", { ns: "common" }), {
+        toast.error(t("imageUploadFailed"), {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
@@ -140,7 +140,7 @@ const Profile = () => {
     } catch (error) {
       toast.error(
         error.response?.data?.message?.[i18n.language] ||
-          t("imageUploadFailed", { ns: "common" }),
+        t("imageUploadFailed"),
         {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
@@ -313,7 +313,7 @@ const Profile = () => {
         } catch (error) {
           toast.error(
             error.response?.data?.message?.[i18n.language] ||
-              t("otpSendFailed", { ns: "common" }),
+            t("otpSendFailed", { ns: "common" }),
             {
               theme: user?.mode === "dark" ? "dark" : "light",
               position: "top-right",
@@ -360,7 +360,7 @@ const Profile = () => {
         } catch (error) {
           toast.error(
             error.response?.data?.message?.[i18n.language] ||
-              t("otpSendFailed", { ns: "common" }),
+            t("otpSendFailed", { ns: "common" }),
             {
               theme: user?.mode === "dark" ? "dark" : "light",
               position: "top-right",
@@ -427,7 +427,7 @@ const Profile = () => {
               setEmailChanged(false);
               toast.success(
                 updateRes.data.message[t("ns")] ||
-                  t("updateSuccess", { ns: "common" })
+                t("updateSuccess", { ns: "common" })
               ),
                 { theme: user?.mode === "dark" ? "dark" : "light" };
             } else {
@@ -453,7 +453,7 @@ const Profile = () => {
               fetchUserData();
               toast.success(
                 updateRes.data.message[t("ns")] ||
-                  t("updateSuccess", { ns: "common" }),
+                t("updateSuccess", { ns: "common" }),
                 {
                   theme: user?.mode === "dark" ? "dark" : "light",
                 }
@@ -695,7 +695,7 @@ const Profile = () => {
                         {t("change")}
                       </Button>
                     }
-                    // status={errors.email ? "error" : ""}
+                  // status={errors.email ? "error" : ""}
                   />
                   {/* {errors.email && (
                     <div
@@ -733,7 +733,7 @@ const Profile = () => {
                         {t("change")}
                       </Button>
                     }
-                    // status={errors.phoneNumber ? "error" : ""}
+                  // status={errors.phoneNumber ? "error" : ""}
                   />
                   {/* {errors.phoneNumber && (
                     <div
