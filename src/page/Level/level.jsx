@@ -352,7 +352,7 @@ const Level = () => {
 
       try {
         const updatePromises = updatedLevels.map((level) =>
-          api.patch(`/level/${level.id}`, { level: level.level })
+          api.patch(`/level/updateOrder/${level.id}`, { level: level.level })
         );
         await Promise.all(updatePromises);
         toast.success(t("updateOrderSuccess"), {
@@ -361,7 +361,7 @@ const Level = () => {
           autoClose: 2000,
         });
       } catch (error) {
-        toast.error(t("updateOrderFailed"), {
+        toast.error(error.response?.data?.message?.[i18n.language], {
           theme: user?.mode === "dark" ? "dark" : "light",
           position: "top-right",
           autoClose: 3000,
@@ -644,7 +644,7 @@ const Level = () => {
                                     ...provided.draggableProps.style,
                                     ...(snapshot.isDragging
                                       ? {
-                                          backgroundColor: "#f0f0f0",
+                                          backgroundColor: "var(--row-hover-bg)",
                                           boxShadow:
                                             "0 4px 8px rgba(0,0,0,0.2)",
                                         }
