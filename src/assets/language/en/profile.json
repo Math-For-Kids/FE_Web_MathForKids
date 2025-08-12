@@ -49,5 +49,8 @@
     "newPhone": "New phone number",
     "duplicateEmail": "The new email cannot be the same as the current email.",
     "duplicatePhone": "The new phone number cannot be the same as the current phone number.",
-    "otpCode": "OTP code"
+    "otpCode": "OTP code",
+    "imageUploadSuccess":"Upload image successfull",
+    "imageUploadFailed":"Upload image failed"
+
 }

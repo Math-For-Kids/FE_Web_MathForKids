@@ -49,5 +49,9 @@
     "newPhone": "Số điện thoại mới",
     "duplicateEmail": "Email mới không được trùng với email hiện tại.",
     "duplicatePhone": "Số điện thoại mới không được trùng với số điện thoại hiện tại.",
-    "otpCode": "Mã OTP"
+    "otpCode": "Mã OTP",
+    "imageUploadSuccess":"Cập nhật ảnh thành công",
+    "imageUploadFailed":"Cập nhật ảnh thất bại"
+
+
 }
